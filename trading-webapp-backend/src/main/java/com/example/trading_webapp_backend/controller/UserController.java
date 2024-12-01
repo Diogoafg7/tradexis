@@ -16,10 +16,15 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<User> getUser(@RequestParam String username) {
+        if (username == null || username.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);  // 400 Bad Request
+        }
+
         User user = userRepository.findByUsername(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(user);
     }
 }
