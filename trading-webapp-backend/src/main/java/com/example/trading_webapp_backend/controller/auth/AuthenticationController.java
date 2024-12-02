@@ -30,8 +30,14 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<JwtAuthenticationResponse> signup(@Valid @RequestBody SignUpRequest request) {
-        return ResponseEntity.ok(authenticationService.signup(request));
+        try {
+            return ResponseEntity.ok(authenticationService.signup(request));
+        } catch (Exception e) {
+            log.error("Erro ao tentar registrar usuário: ", e);
+            return ResponseEntity.status(401).body(null);
+        }
     }
+
 
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(@Valid @RequestBody SigninRequest request) {
@@ -46,8 +52,8 @@ public class AuthenticationController {
     public ResponseEntity<?> validateToken(@RequestBody Map<String, String> requestBody) {
         try {
             String token = requestBody.get("token");
-            String userEmail = jwtService.extractUserName(token);
-            UserDetails userDetails = userAuthService.userDetailsService().loadUserByUsername(userEmail);
+            String userName = jwtService.extractUserName(token);
+            UserDetails userDetails = userAuthService.userDetailsService().loadUserByUsername(userName);
             if (jwtService.isTokenValid(token, userDetails)) {
                 return ResponseEntity.ok().build();
             }
