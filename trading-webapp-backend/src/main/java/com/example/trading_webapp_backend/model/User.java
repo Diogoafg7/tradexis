@@ -1,30 +1,43 @@
 package com.example.trading_webapp_backend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Setter
 @Getter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     // Getters and Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(nullable = false)
     private int id;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @NotBlank(message = "Username is required")
+    @Size(min = 3, max = 20)
     private String username;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email is invalid")
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 120, message = "Password must be between 6 and 120 characters")
     private String password;
 
     @Column(name = "created_at")
@@ -44,26 +57,6 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
-    // Getters, Setters, Construtores, toString...
-
-    public User() {
-    }
-
-    public User(int id, String username, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
-
     // toString
     @Override
     public String toString() {
@@ -75,5 +68,30 @@ public class User {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(() -> "read");
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
