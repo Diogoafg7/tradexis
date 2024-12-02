@@ -12,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getCurrentUser() {
+    public ResponseEntity<Optional<User>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(userService.getUserByUsername(authentication.getName()));
     }
@@ -88,5 +88,14 @@ public class UserController {
         }
     }
 
-    // @PutMapping("/me/password")
+    // update password
+    @PutMapping("/{id}/password")
+    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestParam String password, @RequestParam String oldPassword) {
+        try {
+            return ResponseEntity.ok(userService.updatePassword(Math.toIntExact(id), password, oldPassword));
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.example.trading_webapp_backend.service.implementation;
+package com.example.trading_webapp_backend.service.impl;
 
 import com.example.trading_webapp_backend.model.User;
 import com.example.trading_webapp_backend.repository.UserRepository;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImplementation implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,13 +33,13 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
     public User createUser(User user) {
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(user.getUsername()));
+        Optional<Optional<User>> userOptional = Optional.ofNullable(userRepository.findByUsername(user.getUsername()));
         if (userOptional.isPresent()) {
             throw new UserCreationException("Username already exists");
         }
@@ -59,11 +59,14 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User updateUserByUsername(String username, User userDetails) {
-        User user = userRepository.findByUsername(username);
-        user.setUsername(userDetails.getUsername());
-        user.setEmail(userDetails.getEmail());
-        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-        return userRepository.save(user);
+        Optional<User> user = userRepository.findByUsername(username);
+        user.ifPresent(value -> {
+            value.setUsername(userDetails.getUsername());
+            value.setEmail(userDetails.getEmail());
+            value.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+            userRepository.save(value);
+        });
+        return user.orElseThrow(() -> new UserNotFoundException("User not found with username " + username));
     }
 
     @Override
