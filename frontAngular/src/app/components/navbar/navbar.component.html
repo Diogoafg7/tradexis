@@ -1,30 +1,49 @@
-<div class="flex items-center space-x-6">
+<div class="relative">
+  <!-- Diagonal Background -->
+  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-white to-purple-700 clip-diagonal"></div>
 
-  <nav class="flex space-x-6">
-    <a href="/dashboard" class="hover:text-gray-300 uppercase">Dashboard</a>
-    <a href="/transactions" class="hover:text-gray-300 uppercase">Transações</a>
-    <a href="/transaction-history" class="hover:text-gray-300 uppercase">Histórico</a>
-    <a href="/profile" class="hover:text-gray-300 uppercase">Perfil</a>
-   </nav>
+  <!-- Navigation Bar -->
+  <div class="flex items-center justify-between px-6 py-4">
+    <!-- Logo -->
+    <div class="flex items-center space-x-3">
+      
+    </div>
 
+    <!-- Navigation Links -->
+    <nav class="flex space-x-6">
+      <a href="/dashboard" class="text-black hover:text-gray-300 uppercase">Dashboard</a>
+      <a href="/transactions" class="text-black hover:text-gray-300 uppercase">Transações</a>
+      <a href="/transaction-history" class="text-black hover:text-gray-300 uppercase">Histórico</a>
+      <a href="/profile" class="text-black hover:text-gray-300 uppercase">Perfil</a>
+    </nav>
 
-  <div class="flex items-center space-x-4">
-    <button (click)="navigateToUpdateProfile()" class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
-        <img 
-        *ngIf="userProfileImage; else defaultProfile" 
-        [src]="userProfileImage" 
-        alt="Profile Icon" 
-        class="w-full h-full object-cover">
-      <ng-template #defaultProfile>
-        <div class="w-full h-full flex items-center justify-center bg-gray-400 text-white font-semibold">
-          <span>DF</span> 
-        </div>
-      </ng-template>
-    </button>
-    <div class="flex flex-col items-start pr-5">
-      <label class="text-lg font-medium uppercase">Saldo</label>
-      <span class="text-md font-semibold">100</span> 
+    <!-- Profile and Balance -->
+    <div class="flex items-center space-x-6">
+      <!-- Profile Icon -->
+      <button
+        (click)="navigateToUpdateProfile()"
+        class="w-10 h-10 rounded-full overflow-hidden border-2 border-white"
+      >
+        <img
+          *ngIf="userProfileImage; else defaultProfile"
+          [src]="userProfileImage"
+          alt="Profile Icon"
+          class="w-full h-full object-cover"
+        />
+        <ng-template #defaultProfile>
+          <div
+            class="w-full h-full flex items-center justify-center bg-gray-400 text-white font-semibold"
+          >
+            <span>DF</span>
+          </div>
+        </ng-template>
+      </button>
+
+      <!-- Balance Info -->
+      <div class="flex flex-col items-start">
+        <label class="text-black text-lg font-medium uppercase">Saldo</label>
+        <span class="text-black text-md font-semibold">100</span>
+      </div>
     </div>
   </div>
-  
 </div>
