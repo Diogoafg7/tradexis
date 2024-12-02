@@ -1,46 +1,42 @@
-
-<div class="flex justify-center pt-10">
-    <img src="/assets/logo2.png" alt="">
+<div class="login-container max-w-sm mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-semibold text-center mb-6">Login</h2>
     
-</div>
-
-<h1 class="flex justify-center login">Entrar na Conta</h1>
-
-<div class="bg-white shadow-md rounded-lg max-w-4xl mx-auto p-8">
-    <!-- Formulário de Atualização -->
-    <form class="space-y-4">
+    <form (ngSubmit)="login()" class="space-y-4">
+      <div class="flex flex-col">
+        <label for="username" class="font-medium text-gray-700">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          [(ngModel)]="username" 
+          name="username" 
+          required 
+          class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
       
-
-      <!-- Campo Email -->
-      <div class="flex items-center">
-        <label for="email" class="w-40 text-gray-700 font-semibold">Email:</label>
-        <div class="flex-grow">
-          <input
-            type="email"
-            id="email"
-            placeholder="Digite seu email"
-            class="input input-bordered w-full bg-gray-100"
-          />
-        </div>
+      <div class="flex flex-col">
+        <label for="password" class="font-medium text-gray-700">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          [(ngModel)]="password" 
+          name="password" 
+          required 
+          class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
-
-      <!-- Campo Senha -->
-      <div class="flex items-center">
-        <label for="password" class="w-40 text-gray-700 font-semibold">Password:</label>
-        <div class="flex-grow">
-          <input
-            type="password"
-            id="password"
-            placeholder="Digite sua senha"
-            class="input input-bordered w-full  bg-gray-100"
-          />
-        </div>
+      
+      <div *ngIf="errorMessage" class="text-red-500 text-sm">
+        {{ errorMessage }}
       </div>
-
-      <!-- Botão de Atualizar -->
-      <div class="flex justify-center mt-6">
-        <button class="btn background-purple text-white px-8">Entrar</button>
-      </div>
+      
+      <button 
+        type="submit" 
+        class="w-full py-2 mt-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Login
+      </button>
     </form>
     <h5 class="flex justify-center register pt-4">Ainda não tem conta? Faça o<a href="/register"> &#160;registo</a></h5>
   </div>
+  

@@ -7,6 +7,7 @@ import { TransactionDetailsComponent } from './pages/transaction-details/transac
 import { LoginComponent } from './authentication/login/login.component';
 import { RegisterComponent } from './authentication/register/register.component';
 
+
 export const routes: Routes = [
 
     {path:'dashboard',component:DashboardComponent},
@@ -15,14 +16,16 @@ export const routes: Routes = [
     {path: 'transaction-history',component:TransactionHistoryComponent},
     {path:'transaction-details/:id', component:TransactionDetailsComponent},
     {path: 'login', component: LoginComponent},
-    {path: 'register', component: RegisterComponent}
+    {path: 'register', component: RegisterComponent},
+    {path:'',component:LoginComponent},
+
     
 
 
 
       // default routes
     //   {
-    //     path: '', redirectTo:'/home-page' , pathMatch:'full'
+    //     path: '', redirectTo:'/login' , pathMatch:'full'
     // },
     // {
     //     path: '**', component: NotFoundComponent
