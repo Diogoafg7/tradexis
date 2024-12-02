@@ -4,6 +4,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
 import { TransactionHistoryComponent } from './pages/transaction-history/transaction-history.component';
 import { TransactionDetailsComponent } from './pages/transaction-details/transaction-details.component';
+import { LoginComponent } from './authentication/login/login.component';
 
 export const routes: Routes = [
 
@@ -12,13 +13,15 @@ export const routes: Routes = [
     {path:'transactions', component:TransactionsComponent},
     {path: 'transaction-history',component:TransactionHistoryComponent},
     {path:'transaction-details/:id', component:TransactionDetailsComponent},
+    {path:'',component:LoginComponent},
+    {path:'login',component:LoginComponent},
     
 
 
 
       // default routes
     //   {
-    //     path: '', redirectTo:'/home-page' , pathMatch:'full'
+    //     path: '', redirectTo:'/login' , pathMatch:'full'
     // },
     // {
     //     path: '**', component: NotFoundComponent

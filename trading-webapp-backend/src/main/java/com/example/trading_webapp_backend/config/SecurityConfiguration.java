@@ -30,10 +30,10 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
-
+ 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserAuthService userAuthService;
-
+ 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -41,37 +41,37 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/resource").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
+ 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3306");
+        configuration.addAllowedOriginPattern("http://localhost:*"); // permite todas as portas localhost
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
-
+ 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
+ 
         return source;
     }
-
+ 
     @Bean
     public CorsFilter corsFilter() {
         return new CorsFilter(corsConfigurationSource());
     }
-
+ 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+ 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -79,10 +79,9 @@ public class SecurityConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
+ 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 }

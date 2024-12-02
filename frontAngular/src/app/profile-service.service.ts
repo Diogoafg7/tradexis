@@ -8,15 +8,15 @@ import { Profile } from './models/profile';
   providedIn: 'root'
 })
 export class ProfileServiceService {
+  // constructor(private httpClient: HttpClient) {}
 
-  // constructor(private httpClient: HttpClient) {
+  // getProfile(): Observable<any> {
+  //   return this.httpClient.get('http://localhost:8080/users');
   // }
 
-  // getProfile(): Observable<any>{
-  //   return this.httpClient.get('http://localhost:8080/user?username=user1')
-  // }
-
-  // updateProfile(profile: Profile): Observable<any>{
+   // updateProfile(profile: Profile): Observable<any>{
   //   return this.httpClient.put('http://localhost:8080/user?username=user1', profile)
   // }
+  
 }
+
