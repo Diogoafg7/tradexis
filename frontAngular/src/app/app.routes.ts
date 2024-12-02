@@ -5,6 +5,8 @@ import { TransactionsComponent } from './pages/transactions/transactions.compone
 import { TransactionHistoryComponent } from './pages/transaction-history/transaction-history.component';
 import { TransactionDetailsComponent } from './pages/transaction-details/transaction-details.component';
 import { LoginComponent } from './authentication/login/login.component';
+import { RegisterComponent } from './authentication/register/register.component';
+
 
 export const routes: Routes = [
 
@@ -13,8 +15,10 @@ export const routes: Routes = [
     {path:'transactions', component:TransactionsComponent},
     {path: 'transaction-history',component:TransactionHistoryComponent},
     {path:'transaction-details/:id', component:TransactionDetailsComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'register', component: RegisterComponent},
     {path:'',component:LoginComponent},
-    {path:'login',component:LoginComponent},
+
     
 
 
