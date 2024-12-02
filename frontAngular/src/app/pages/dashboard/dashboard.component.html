@@ -1,1 +1,61 @@
-<p>dashboard works!</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Ações Disponíveis</h2>
+      <div class="space-y-4">
+        <!-- Repeated Action Cards -->
+        <div
+          class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200"
+        >
+          <div class="flex items-center gap-4">
+            <div class="bg-purple-200 text-purple-700 rounded-full p-3">
+              🐷
+            </div>
+            <div>
+              <div class="text-lg font-bold text-gray-700">TESLA</div>
+              <div class="text-sm text-gray-500">TSLA</div>
+            </div>
+          </div>
+          <div class="flex flex-col items-end">
+            <div class="text-lg font-bold text-gray-700">$336.09</div>
+            <div class="text-sm text-green-500">
+              +0.07% <span class="text-gray-500">(0.21%)</span>
+            </div>
+            <button class="btn btn-primary mt-2">Comprar</button>
+          </div>
+        </div>
+
+        <div
+          class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200"
+        >
+          <div class="flex items-center gap-4">
+            <div class="bg-purple-200 text-purple-700 rounded-full p-3">
+              🐷
+            </div>
+            <div>
+              <div class="text-lg font-bold text-gray-700">AMAZON</div>
+              <div class="text-sm text-gray-500">AMZN</div>
+            </div>
+          </div>
+          <div class="flex flex-col items-end">
+            <div class="text-lg font-bold text-gray-700">$3,250.10</div>
+            <div class="text-sm text-red-500">
+              -0.15% <span class="text-gray-500">(1.08%)</span>
+            </div>
+            <button class="btn btn-primary mt-2">Comprar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Gráficos</h2>
+      <div class="space-y-6">
+        <div class="bg-purple-200 rounded-lg h-40 flex items-center justify-center text-purple-700">
+          <span>📊 Gráfico TESLA</span>
+        </div>
+        <div class="bg-purple-200 rounded-lg h-40 flex items-center justify-center text-purple-700">
+          <span>📊 Gráfico AMAZON</span>
+        </div>
+      </div>
+    </section>
+  </div>
