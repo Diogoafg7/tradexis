@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,7 @@ import { HeaderComponent } from './components/header/header.component';
 })
 export class AppComponent {
   title = 'Tradexis';
+  
+  
+  
 }

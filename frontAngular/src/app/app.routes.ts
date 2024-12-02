@@ -15,7 +15,7 @@ export const routes: Routes = [
     {path: 'transaction-history',component:TransactionHistoryComponent},
     {path:'transaction-details/:id', component:TransactionDetailsComponent},
     {path: 'login', component: LoginComponent},
-    {path: 'register', component: RegisterComponent},
+    {path: 'register', component: RegisterComponent}
     
 
 
