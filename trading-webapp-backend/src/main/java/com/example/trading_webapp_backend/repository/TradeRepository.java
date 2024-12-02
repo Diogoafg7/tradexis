@@ -2,7 +2,10 @@ package com.example.trading_webapp_backend.repository;
 
 import com.example.trading_webapp_backend.model.Trade;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public interface TradeRepository extends JpaRepository<Trade, Integer>{
@@ -10,6 +13,7 @@ public interface TradeRepository extends JpaRepository<Trade, Integer>{
 
     //List<Trade> findAll(Sort sort); --Ordenar desc, asc - data de criação
 
+    //    @Query("SELECT t FROM Trade t WHERE t.id = :id")
     Trade getById(int id);
     //Total de trades de um determinado id
     @Query("SELECT COUNT(t) FROM Trades t WHERE t.user.id = :user_id")

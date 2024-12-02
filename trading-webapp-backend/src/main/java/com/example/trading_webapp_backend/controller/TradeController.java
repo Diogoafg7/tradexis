@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 public class TradeController {
 
@@ -15,17 +18,17 @@ public class TradeController {
     private TradeRepository tradeRepository;
 
     @GetMapping("/trades")
-    public ResponseEntity<Trade> getAll() {
-        Trade trade = tradeRepository.getAll();
+    public ResponseEntity<List<Trade>> getAll() {
+        List<Trade> trade = tradeRepository.getAll();
         if (trade == null) {
             return ResponseEntity.notFound().build();
         }
-        return List.of();
+        return ResponseEntity.ok(trade);
     }
 
     @GetMapping("/trades")
-    public ResponseEntity<Trade> getById(@RequestParam int id) {
-        Trade trade = tradeRepository.findById(id);
+    public ResponseEntity<Optional<Trade>> getById(@RequestParam int id) {
+        Optional<Trade> trade = tradeRepository.findById(id);
         if (trade == null) {
             return ResponseEntity.notFound().build();
         }

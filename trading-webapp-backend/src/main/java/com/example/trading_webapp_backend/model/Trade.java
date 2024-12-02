@@ -94,9 +94,9 @@ public class Trade {
         this.createdAt = createdAt;
     }
 
-    public Trade(int id, int user_id, int asset_id, int trade_type_id, decimal quantity, decimal price, decimal total,LocalDateTime createdAt) {
+    public Trade(int id, User user_id, int asset_id, int trade_type_id, double quantity, double price, double total,LocalDateTime createdAt) {
         this.id = id;
-        this.user_id = user_id;
+        this.user = user_id;
         this.asset_id = asset_id;
         this.trade_type_id = trade_type_id;
         this.quantity = roundToTwoDecimalPlaces(quantity);
@@ -110,7 +110,7 @@ public class Trade {
     public String toString() {
         return "Trade{" +
                 "id=" + id +
-                ", user_id='" + user_id + '\'' +
+                ", user_id='" + user + '\'' +
                 ", asset_id='" + asset_id + '\'' +
                 ", trade_type_id='" + trade_type_id + '\'' +
                 ", quantity=" + String.format("%.2f", quantity) +
