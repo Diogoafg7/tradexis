@@ -6,17 +6,17 @@ import { TransactionHistoryComponent } from './pages/transaction-history/transac
 import { TransactionDetailsComponent } from './pages/transaction-details/transaction-details.component';
 import { LoginComponent } from './authentication/login/login.component';
 import { RegisterComponent } from './authentication/register/register.component';
-
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
 
-    {path:'dashboard',component:DashboardComponent},
-    {path:'profile',component:ProfileComponent},
-    {path:'transactions', component:TransactionsComponent},
-    {path: 'transaction-history',component:TransactionHistoryComponent},
-    {path:'transaction-details/:id', component:TransactionDetailsComponent},
-    {path: 'login', component: LoginComponent},
-    {path: 'register', component: RegisterComponent},
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard] },
+  { path: 'transaction-history', component: TransactionHistoryComponent, canActivate: [AuthGuard] },
+  { path: 'transaction-details/:id', component: TransactionDetailsComponent, canActivate: [AuthGuard] },
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
     
 
     
