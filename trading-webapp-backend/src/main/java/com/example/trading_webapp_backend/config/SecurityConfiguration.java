@@ -30,10 +30,10 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
- 
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserAuthService userAuthService;
- 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/resource").permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().permitAll()) // anyRequest().authenticated()
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -51,6 +51,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("http://localhost:*"); // permite todas as portas localhost
         configuration.addAllowedOriginPattern("http://localhost:*"); // permite todas as portas localhost
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
