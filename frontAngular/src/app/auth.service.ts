@@ -20,6 +20,7 @@ interface JwtAuthenticationResponse {
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth/signin';  
+  private apiSingupUrl = 'http://localhost:8080/auth';
 
   constructor(private httpClient: HttpClient, private router: Router) {}
 
@@ -27,6 +28,10 @@ export class AuthService {
   login(username: string, password: string): Observable<JwtAuthenticationResponse> {
     const signinRequest: SigninRequest = { username, password };
     return this.httpClient.post<JwtAuthenticationResponse>(this.apiUrl, signinRequest);
+  }
+
+  register(userData: any): Observable<any> {
+    return this.httpClient.post(`${this.apiSingupUrl}/signup`, userData);
   }
 
  
