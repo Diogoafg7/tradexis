@@ -2,11 +2,12 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileServiceService } from '../../profile-service.service';
 import { Profile } from '../../models/profile';
+import { HeaderComponent } from '../../components/header/header.component';
 
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, HeaderComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
