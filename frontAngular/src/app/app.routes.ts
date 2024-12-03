@@ -17,17 +17,15 @@ export const routes: Routes = [
     {path:'transaction-details/:id', component:TransactionDetailsComponent},
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
-    {path:'',component:LoginComponent},
+    
 
     
 
 
 
       // default routes
-    //   {
-    //     path: '', redirectTo:'/login' , pathMatch:'full'
-    // },
-    // {
-    //     path: '**', component: NotFoundComponent
-    // }
+      {path:'',component:LoginComponent},
+     {
+         path: '**', component: LoginComponent
+     }
 ];
