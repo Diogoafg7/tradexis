@@ -6,10 +6,8 @@
 <h1 class="flex justify-center login">Entrar na Conta</h1>
 
 <div class="bg-white shadow-md rounded-lg max-w-4xl mx-auto p-8">
-  <!-- Formulário de Atualização -->
   <form (ngSubmit)="login()" class="space-y-4">
 
-    <!-- Campo Email -->
     <div class="flex items-center">
       <label for="username" class="w-40 text-gray-700 font-semibold">Email:</label>
       <div class="flex-grow">
@@ -25,7 +23,6 @@
       </div>
     </div>
 
-    <!-- Campo Senha -->
     <div class="flex items-center">
       <label for="password" class="w-40 text-gray-700 font-semibold">Password:</label>
       <div class="flex-grow">
@@ -44,7 +41,6 @@
       {{ errorMessage }}
     </div>
 
-    <!-- Botão de Atualizar -->
     <div class="flex justify-center mt-6">
       <button type="submit" class="btn background-purple text-white px-8">Entrar</button>
     </div>

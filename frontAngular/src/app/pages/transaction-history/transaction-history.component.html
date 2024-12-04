@@ -1,121 +1,76 @@
 <app-header />
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Ações Disponíveis -->
   <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
     <h2 class="text-lg font-semibold mb-4 text-gray-700">Ações Disponíveis</h2>
     <div class="space-y-4">
-      <!-- Repeated Action Cards -->
       <div
-        class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200"
+        *ngFor="let acao of acoes; let i = index"
+        class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer transition-transform duration-300 ease-in-out"
+        [ngClass]="{'active': selectedIndex === i}"
+        (click)="mostrarDetalhes(i)" 
       >
         <div class="flex items-center gap-4">
           <div class="bg-purple-200 text-purple-700 rounded-full p-3">
             🐷
           </div>
           <div>
-            <div class="text-lg font-bold text-gray-700">TESLA</div>
-            <div class="text-sm text-gray-500">TSLA</div>
+            <div class="text-lg font-bold text-gray-700">{{ acao.nome }}</div>
+            <div class="text-sm text-gray-500">{{ acao.sigla }}</div>
           </div>
         </div>
         <div class="flex flex-col items-end">
-          <div class="text-lg font-bold text-gray-700">$336.09</div>
+          <div class="text-lg font-bold text-gray-700">{{ acao.preco }}</div>
           <div class="text-sm text-green-500">
-            +0.07% <span class="text-gray-500">(0.21%)</span>
+            {{ acao.diferenca }} <span class="text-gray-500">({{ acao.percentual }})</span>
           </div>
-          <button class="btn background-purple mt-2">Comprar</button>
-        </div>
-      </div>
-
-      <div
-        class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200"
-      >
-        <div class="flex items-center gap-4">
-          <div class="bg-purple-200 text-purple-700 rounded-full p-3">
-            🐷
-          </div>
-          <div>
-            <div class="text-lg font-bold text-gray-700">AMAZON</div>
-            <div class="text-sm text-gray-500">AMZN</div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end">
-          <div class="text-lg font-bold text-gray-700">$3,250.10</div>
-          <div class="text-sm text-red-500">
-            -0.15% <span class="text-gray-500">(1.08%)</span>
-          </div>
-          <button class="btn background-purple mt-2">Comprar</button>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Detalhes da Transação -->
   <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
     <h2 class="text-lg font-semibold mb-4 text-gray-700">Detalhes de transações</h2>
     <div class="space-y-6">
       <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200 max-w-lg mx-auto">
-        <!-- Cabeçalho do Card -->
         <h2 class="text-lg font-semibold mb-4 text-gray-700">Detalhes da Transação</h2>
       
-        <!-- Detalhes da Transação -->
-        <div class="space-y-4">
-          <!-- Nome da Ação -->
+        <div class="space-y-4" *ngIf="detalhesTransacao">
           <div class="flex justify-between items-center">
             <span class="text-gray-600 font-medium">Tipo:</span>
-            <span class="text-gray-800 font-semibold">Stock</span>
+            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.tipo }}</span>
           </div>
-          <!-- Status da Transação -->
           <div class="flex justify-between items-center">
             <span class="text-gray-600 font-medium">Status:</span>
-            <span class="text-green-600 font-semibold">Concluído</span>
+            <span class="text-green-600 font-semibold">{{ detalhesTransacao.status }}</span>
           </div>
-          <!-- Nome da Ação -->
           <div class="flex justify-between items-center">
             <span class="text-gray-600 font-medium">Ação:</span>
-            <span class="text-gray-800 font-semibold">Tesla (TSLA)</span>
+            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.nome }}</span>
           </div>
-      
-          <!-- Valor Investido -->
           <div class="flex justify-between items-center">
             <span class="text-gray-600 font-medium">Valor Investido:</span>
-            <span class="text-gray-800 font-semibold">$1,200.00</span>
+            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.valorInvestido }}</span>
           </div>
-
-          <!-- Valor Investido -->
           <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Preço de execução:</span>
-            <span class="text-gray-800 font-semibold">$1,200.00</span>
+            <span class="text-gray-600 font-medium">Preço de Execução:</span>
+            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.precoExecucao }}</span>
           </div>
-      
-          <!-- Quantidade Comprada -->
           <div class="flex justify-between items-center">
             <span class="text-gray-600 font-medium">Quantidade:</span>
-            <span class="text-gray-800 font-semibold">3 ações</span>
+            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.quantidade }}</span>
           </div>
-      
-          <!-- Data da Transação -->
           <div class="flex justify-between items-center">
             <span class="text-gray-600 font-medium">Submetida em:</span>
-            <span class="text-gray-800 font-semibold">02/12/2024</span>
+            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.submetidaEm }}</span>
           </div>
-        
-
-        <!-- Data da Transação -->
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Resultado:</span>
-          <span class="text-gray-800 font-semibold">20000$</span>
-        </div>
-      </div>
-
-        
-      
-        <!-- Botão de Voltar -->
-        <div class="mt-6 text-center">
-          <button class="btn background-purple text-white px-6 py-2 rounded-md hover:bg-purple-700">
-            Voltar
-          </button>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium">Resultado:</span>
+            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.resultado }}</span>
+          </div>
         </div>
       </section>
-      
-      
     </div>
   </section>
 </div>

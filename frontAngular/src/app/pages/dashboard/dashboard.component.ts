@@ -8,5 +8,5 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-
+  
 }

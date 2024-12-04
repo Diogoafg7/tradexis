@@ -11,23 +11,19 @@ import { ProfileDetailsComponent } from './pages/profile-details/profile-details
 
 export const routes: Routes = [
 
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'profile-details/:id', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
-  { path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard] },
-  { path: 'transaction-history', component: TransactionHistoryComponent, canActivate: [AuthGuard] },
-  { path: 'transaction-details/:id', component: TransactionDetailsComponent, canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent},
-  { path: 'register', component: RegisterComponent},
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+    { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+    { path: 'profile-details/:id', component: ProfileDetailsComponent, canActivate: [AuthGuard]},
+    { path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard] },
+    { path: 'transaction-history', component: TransactionHistoryComponent, canActivate: [AuthGuard] },
+    { path: 'transaction-details/:id', component: TransactionDetailsComponent, canActivate: [AuthGuard] },
+    { path: 'login', component: LoginComponent},
+    { path: 'register', component: RegisterComponent},
     
-
     
-
-
-
-      // default routes
-      {path:'',component:LoginComponent},
-     {
-         path: '**', component: LoginComponent
-     }
+    // default routes
+    {path:'',component:LoginComponent},
+   {
+       path: '**', component: LoginComponent
+   }
 ];
