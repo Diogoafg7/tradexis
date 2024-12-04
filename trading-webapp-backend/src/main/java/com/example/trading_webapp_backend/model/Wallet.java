@@ -12,7 +12,7 @@ public class Wallet {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     double balance;

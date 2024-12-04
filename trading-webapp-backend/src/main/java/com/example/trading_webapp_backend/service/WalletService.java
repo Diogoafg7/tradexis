@@ -1,5 +1,6 @@
 package com.example.trading_webapp_backend.service;
 
+import com.example.trading_webapp_backend.dtos.WalletDTO;
 import com.example.trading_webapp_backend.model.Wallet;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,8 @@ import java.util.List;
 public interface WalletService {
     List<Wallet> getAllWallets();
     Wallet getWalletById(int id);
-    /*Wallet getBalanceById(int id);
-    Wallet getBalanceByUserId(int user_id);
-    Wallet createWallet(Wallet wallet);
-    Wallet updateWalletById(int id, Wallet wallet);
-    void deleteWallet(int id);*/
+    Wallet getWalletByUsername(String username);
+    Wallet addFundsToWallet(int id, double amount);
+    Wallet createWallet(WalletDTO dto);
+    void deleteWallet(int id);
 }
