@@ -174,7 +174,7 @@ public class AssetsServiceImpl implements AssetsService {
         typeAssetsService.populateTypes();
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new ClassPathResource("data/top_3_stocks.csv").getInputStream()))) {
+                new InputStreamReader(new ClassPathResource("data/top_19_stocks.csv").getInputStream()))) {
 
             String line = reader.readLine(); // Ignorar cabeçalho
             if (line == null) {

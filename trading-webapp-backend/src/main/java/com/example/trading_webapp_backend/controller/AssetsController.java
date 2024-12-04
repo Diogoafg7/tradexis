@@ -4,6 +4,7 @@ import com.example.trading_webapp_backend.model.Assets;
 import com.example.trading_webapp_backend.service.AssetsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public class AssetsController {
     @Autowired
     private AssetsService assetsService;
 
+    //updateAssetsPrices - update prices from API every 20 minutes
+    @Scheduled(fixedRate = 1200000)
     @GetMapping("/updatePrices")
     public ResponseEntity<String> updateAssetPrices() {
         assetsService.updateAssetsPricesFromApi();
