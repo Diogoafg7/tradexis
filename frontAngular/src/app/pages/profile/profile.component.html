@@ -46,6 +46,7 @@
               class="input input-bordered w-full bg-gray-100"
             />
           </div>
+
         </div>
   
         <!-- Campo Senha -->
@@ -59,6 +60,7 @@
               class="input input-bordered w-full  bg-gray-100"
             />
           </div>
+
         </div>
   
         <!-- Campo Confirmação de Senha -->
@@ -76,7 +78,9 @@
   
         <!-- Botão de Atualizar -->
         <div class="flex justify-center mt-6">
-          <button class="btn background-purple text-white px-8">Atualizar</button>
+          <a class="btn background-purple text-white px-8" 
+     [routerLink]="['/profile-details', id]" 
+     routerLinkActive="router-link-active">Editar</a>
         </div>
       </form>
     </div>

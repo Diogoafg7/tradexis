@@ -3,11 +3,12 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ProfileServiceService } from '../../profile-service.service';
 import { Profile } from '../../models/profile';
 import { HeaderComponent } from '../../components/header/header.component';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule, HeaderComponent],
+  imports: [ReactiveFormsModule, HeaderComponent, RouterLink],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -56,4 +57,12 @@ export class ProfileComponent {
   //      });
   //    }
   //  }
+  id: number | null = null;  // Inicializa a variável id
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    // Aqui você pode obter o id do usuário via um serviço de API ou diretamente de algum estado
+    this.id = 1; // Exemplo: atribuindo um id fixo, substitua com lógica real
+  }
   }
