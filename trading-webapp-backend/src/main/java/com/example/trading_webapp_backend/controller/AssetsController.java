@@ -16,8 +16,8 @@ public class AssetsController {
     @Autowired
     private AssetsService assetsService;
 
-    //updateAssetsPrices - update prices from API every 20 minutes
-    @Scheduled(fixedRate = 1200000)
+    //updateAssetsPrices - update prices from API every 20 minutes(1200000) or 1 minute(60000)
+    @Scheduled(fixedRate = 60000)
     @GetMapping("/updatePrices")
     public ResponseEntity<String> updateAssetPrices() {
         assetsService.updateAssetsPricesFromApi();
@@ -55,5 +55,11 @@ public class AssetsController {
     public ResponseEntity<String> importAssets() {
         assetsService.importAssetsFromFile();
         return ResponseEntity.ok("Ativos importados com sucesso!");
+    }
+
+    @GetMapping("delete-all")
+    public ResponseEntity<String> deleteAllAssets() {
+        assetsService.deleteAllAssets();
+        return ResponseEntity.ok("Ativos deletados com sucesso!");
     }
 }

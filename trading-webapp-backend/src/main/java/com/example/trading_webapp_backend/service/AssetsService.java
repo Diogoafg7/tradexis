@@ -14,4 +14,5 @@ public interface AssetsService {
     String getAssetPrice(String symbol);
     void importAssetsFromFile();
     void saveOrUpdateAsset(String symbol, String name, Double price, Long typeId, LocalDateTime createdAt);
+    void deleteAllAssets();
 }

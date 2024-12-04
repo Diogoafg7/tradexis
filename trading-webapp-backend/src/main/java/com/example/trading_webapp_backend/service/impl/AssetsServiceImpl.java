@@ -5,20 +5,27 @@ import com.example.trading_webapp_backend.model.Type_Assets;
 import com.example.trading_webapp_backend.repository.AssetsRepository;
 import com.example.trading_webapp_backend.repository.Type_AssetsRepository;
 import com.example.trading_webapp_backend.service.AssetsService;
+import com.example.trading_webapp_backend.service.StockHistoryService;
 import com.example.trading_webapp_backend.service.Type_AssetsService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.client.reactive.ClientHttpConnector;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.http.client.HttpClientConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -39,11 +46,24 @@ public class AssetsServiceImpl implements AssetsService {
     @Autowired
     private Type_AssetsService typeAssetsService;
 
+    @Autowired
+    private StockHistoryService stockHistoryService;
+
     private final String FINNHUB_API_KEY = "ct6ttmhr01qr3sdsuv60ct6ttmhr01qr3sdsuv6g";
     private final String FINNHUB_URL = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=" + FINNHUB_API_KEY;
 
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+
+    public AssetsServiceImpl() {
+        this.webClient = WebClient.builder()
+                .baseUrl("https://finnhub.io/api/v1")
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
+                        .responseTimeout(Duration.ofSeconds(10))  // Timeout de 10 segundos
+                        .doOnConnected(conn -> conn.addHandlerLast(new IdleStateHandler(10, 10, 10)))))
+                .build();
+    }
 
     @Override
     public List<Assets> getAllAssets() {
@@ -80,6 +100,9 @@ public class AssetsServiceImpl implements AssetsService {
                     asset.setPrice(price);
                     assetsRepository.save(asset);
                     logger.info("Preço atualizado com sucesso para o ativo {}.", asset.getSymbol());
+
+                    // Após a atualização do preço, adicionamos ao histórico
+                    stockHistoryService.saveStockHistory(asset, price, LocalDateTime.now(ZoneOffset.UTC));
                 } else {
                     logger.warn("Preço inválido para o ativo {}: {}. Atualização ignorada.", asset.getSymbol(), price);
                 }
@@ -113,6 +136,8 @@ public class AssetsServiceImpl implements AssetsService {
                     double price = responseNode.get("currentPrice").asDouble();
                     asset.setPrice(price);
                     updatedAssets.add(asset);
+                    logger.info("Preço atualizado para o ativo {}: {}", asset.getSymbol(), price);
+                    stockHistoryService.saveStockHistory(asset, price, LocalDateTime.now(ZoneOffset.UTC));
                 } else {
                     logger.warn("Nenhum preço encontrado para o ativo: {}", asset.getSymbol());
                 }
@@ -143,6 +168,8 @@ public class AssetsServiceImpl implements AssetsService {
                     .uri(url)
                     .retrieve()
                     .bodyToMono(String.class)
+                    .retry(3) // Tenta novamente até 3 vezes em caso de erro
+                    .timeout(Duration.ofSeconds(10)) // Timeout de 10 segundos
                     .block();
 
             logger.info("Resposta JSON recebida para {}: {}", symbol, response);
@@ -174,7 +201,7 @@ public class AssetsServiceImpl implements AssetsService {
         typeAssetsService.populateTypes();
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new ClassPathResource("data/top_19_stocks.csv").getInputStream()))) {
+                new InputStreamReader(new ClassPathResource("data/top_3_stocks.csv").getInputStream()))) {
 
             String line = reader.readLine(); // Ignorar cabeçalho
             if (line == null) {
@@ -243,5 +270,10 @@ public class AssetsServiceImpl implements AssetsService {
             Assets newAsset = new Assets(name, symbol, typeAssetsRepository.findById(Math.toIntExact(typeId)).orElseThrow(), price, createdAt);
             assetsRepository.save(newAsset);
         }
+    }
+
+    @Override
+    public void deleteAllAssets() {
+        assetsRepository.deleteAll();
     }
 }
