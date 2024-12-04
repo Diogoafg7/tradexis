@@ -67,7 +67,7 @@ public class WalletServiceImpl implements WalletService {
         Wallet wallet = new Wallet();
         wallet.setId(dto.getId());
         wallet.setUser(user);
-        wallet.setBalance(dto.getBalance());
+        wallet.setBalance(0);
         wallet.setUpdatedAt(LocalDateTime.now());
 
         return walletRepository.save(wallet);
