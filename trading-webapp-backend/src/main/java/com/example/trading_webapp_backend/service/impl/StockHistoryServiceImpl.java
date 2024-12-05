@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StockHistoryServiceImpl implements StockHistoryService {
@@ -106,4 +107,10 @@ public class StockHistoryServiceImpl implements StockHistoryService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public List<StockHistory> getStockHistoriesByAssetId(int assetId) {
+        return stockHistoryRepository.findAllByAsset_Id(assetId);
+    }
+
 }

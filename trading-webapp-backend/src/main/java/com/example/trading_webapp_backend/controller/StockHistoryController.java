@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/stock-history")
@@ -30,6 +31,12 @@ public class StockHistoryController {
     @GetMapping("/get-all")
     public List<StockHistory> getAllStockHistories() {
         return stockHistoryService.getAllStockHistories();
+    }
+
+    // Endpoint para obter um histórico de preço por id do ativo
+    @GetMapping("/get-by-asset-id/{assetId}")
+    public List<StockHistory> getStockHistoriesByAssetId(@PathVariable int assetId) {
+        return stockHistoryService.getStockHistoriesByAssetId(assetId);
     }
 
     // Endpoint para adicionar ou update um novo histórico de preço para um ativo
@@ -66,19 +73,5 @@ public class StockHistoryController {
     @DeleteMapping("/delete-all")
     public void deleteAllStockHistories() {
         stockHistoryService.deleteAllStockHistories();
-    }
-
-    // Endpoint para importar históricos de preço de um arquivo
-    // Not working
-    @PostMapping("/import")
-    public void importStockHistoriesFromFile() {
-        stockHistoryService.importStockHistoriesFromFile();
-    }
-
-    // Endpoint para exportar históricos de preço para um arquivo
-    // Not working
-    @GetMapping("/export")
-    public void exportStockHistoriesToFile() {
-        stockHistoryService.exportStockHistoriesToFile();
     }
 }

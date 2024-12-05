@@ -5,6 +5,7 @@ import com.example.trading_webapp_backend.model.StockHistory;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface StockHistoryService {
     StockHistory getStockHistoryById(int id);
@@ -17,4 +18,5 @@ public interface StockHistoryService {
     void deleteAllStockHistories();
     void importStockHistoriesFromFile();
     void exportStockHistoriesToFile();
+    List<StockHistory> getStockHistoriesByAssetId(int assetId);
 }
