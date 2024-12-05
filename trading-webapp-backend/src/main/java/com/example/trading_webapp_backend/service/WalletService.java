@@ -9,9 +9,14 @@ import java.util.List;
 public interface WalletService {
     List<Wallet> getAllWallets();
     Wallet getWalletById(int id);
-    /*Wallet getBalanceById(int id);
+    Wallet getBalanceById(int id);
     Wallet getBalanceByUserId(int user_id);
     Wallet createWallet(Wallet wallet);
     Wallet updateWalletById(int id, Wallet wallet);
-    void deleteWallet(int id);*/
+    void deleteWallet(int id);
+    Wallet getWalletByUserId(int userId);
+    Wallet createWallet(int userId, double balance);
+    Wallet updateWalletBalance(int userId, double balance);
+    void deleteWalletByUserId(int userId);
+    void deleteAllWallets();
 }

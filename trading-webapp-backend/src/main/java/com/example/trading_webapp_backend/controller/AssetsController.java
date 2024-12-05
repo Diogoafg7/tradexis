@@ -17,7 +17,7 @@ public class AssetsController {
     private AssetsService assetsService;
 
     //updateAssetsPrices - update prices from API every 20 minutes(1200000) or 1 minute(60000)
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 1200000)
     @GetMapping("/updatePrices")
     public ResponseEntity<String> updateAssetPrices() {
         assetsService.updateAssetsPricesFromApi();
