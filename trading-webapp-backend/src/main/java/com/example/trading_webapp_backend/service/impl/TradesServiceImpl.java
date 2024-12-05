@@ -28,6 +28,9 @@ public class TradesServiceImpl implements TradesService {
     @Autowired
     private WalletRepository walletRepository;
 
+    @Autowired
+    private PortfolioRepository portfolioRepository;
+
     @Override
     public List<Trades> getAllTrades() {
         return tradesRepository.findAll();
@@ -91,18 +94,50 @@ public class TradesServiceImpl implements TradesService {
 
         //Remove or Add Value from User Wallet
         if(tradeType.getName().equals("Buy")) {
-            Wallet wallet = walletRepository.findByUser_Id(userId).orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
-            if(wallet.getBalance() < total) {
-                throw new IllegalArgumentException("Insufficient balance");
-            }
-            wallet.setBalance(wallet.getBalance() - total);
+            handleBuyTrade(trade);
         } else if(tradeType.getName().equals("Sell")) {
-            Wallet wallet = walletRepository.findByUser_Id(userId).orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
-            wallet.setBalance(wallet.getBalance() + total);
+            handleSellTrade(trade);
         } else {
-            throw new IllegalArgumentException("Invalid trade type");
+            throw new IllegalArgumentException("Trade type not found");
         }
 
         return tradesRepository.save(trade);
+    }
+
+    void handleSellTrade(Trades trade) {
+        Portfolio portfolio = portfolioRepository.findByUserAndAsset(trade.getUser(), trade.getAsset()).orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
+        Wallet wallet = walletRepository.findByUser_Id(trade.getUser().getId()).orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
+
+        if(portfolio.getQuantity() < trade.getQuantity()) {
+            throw new IllegalArgumentException("You do not have enough quantity to sell");
+        }
+
+        double total = trade.getQuantity() * trade.getAsset().getPrice();
+        wallet.setBalance(wallet.getBalance() + total);
+        portfolio.setQuantity(portfolio.getQuantity() - trade.getQuantity());
+
+        walletRepository.save(wallet);
+        portfolioRepository.save(portfolio);
+    }
+
+    void handleBuyTrade(Trades trade) {
+        Portfolio portfolio = portfolioRepository.findByUserAndAsset(trade.getUser(), trade.getAsset()).orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
+        Wallet wallet = walletRepository.findByUser_Id(trade.getUser().getId()).orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
+
+        double total = trade.getQuantity() * trade.getAsset().getPrice();
+        if(wallet.getBalance() < total) {
+            throw new IllegalArgumentException("Insufficient balance");
+        }
+
+        wallet.setBalance(wallet.getBalance() - total);
+        if (portfolio.getAsset().equals(trade.getAsset())) {
+            portfolio.setQuantity(portfolio.getQuantity() + trade.getQuantity());
+        } else {
+            portfolio.setAsset(trade.getAsset());
+            portfolio.setQuantity(trade.getQuantity());
+        }
+
+        walletRepository.save(wallet);
+        portfolioRepository.save(portfolio);
     }
 }
