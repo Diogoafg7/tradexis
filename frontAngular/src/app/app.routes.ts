@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { TransactionsComponent } from './pages/transactions/transactions.component';
@@ -22,7 +22,7 @@ export const routes: Routes = [
     
     
     // default routes
-    {path:'',component:LoginComponent},
+    {path:'',component:LoginComponent, pathMatch: 'full'},
    {
        path: '**', component: LoginComponent
    }
