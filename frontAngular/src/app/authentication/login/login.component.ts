@@ -22,9 +22,11 @@ export class LoginComponent {
       this.authService.login(this.username, this.password).subscribe(
         (response) => {
           const token = response.token;
-          if (token) {
-            this.authService.saveToken(token);  
-            this.authService.redirectToDashboard();  
+          const userId = response.user.id;  
+          if (token && userId) {
+            this.authService.saveToken(token);
+            localStorage.setItem('user_id', userId.toString());  
+            this.authService.redirectToDashboard();
           }
         },
         (error) => {
@@ -35,4 +37,5 @@ export class LoginComponent {
       this.errorMessage = 'Please enter both username and password.';
     }
   }
+  
 }

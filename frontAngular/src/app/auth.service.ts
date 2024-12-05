@@ -13,6 +13,19 @@ interface SigninRequest {
 
 interface JwtAuthenticationResponse {
   token: string;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+    password: string;  
+    createdAt: string;
+    updatedAt: string;
+    enabled: boolean;
+    authorities: Array<{ authority: string }>;
+    credentialsNonExpired: boolean;
+    accountNonExpired: boolean;
+    accountNonLocked: boolean;
+  };
 }
 
 @Injectable({
