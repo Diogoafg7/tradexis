@@ -3,9 +3,9 @@
   <div class="absolute inset-0 -z-10 bg-gray-50"></div>
   <div class="absolute inset-0 -z-10 background-purple clip-diagonal"></div>
 
-  <div [routerLink]="'/dashboard'" class="pointer flex justify-between items-center h-full px-8">
+  <div class="pointer flex justify-between items-center h-full px-8">
     <div class="flex items-center space-x-4">
-      <img src="/assets/logo2.png" alt="Logo" class="w-65 h-20">
+      <img [routerLink]="'/dashboard'" src="/assets/logo2.png" alt="Logo" class="w-65 h-20">
     </div>
 
     <app-navbar></app-navbar>
