@@ -11,6 +11,7 @@ import com.example.trading_webapp_backend.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private WalletService walletService;
+
+    @Autowired
+    private PortfolioService portfolioService;
 
     @Override
     public List<User> getAllUsers() {
@@ -43,7 +47,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    @Override
+    @Transactional
     public User createUser(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new UserCreationException("Username already exists");
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService {
 
         // Criar carteira e portfólio
         walletService.createWallet(savedUser.getId(), 0.0);
+        portfolioService.createPortfolio(savedUser.getUsername());
         return savedUser;
     }
 
@@ -83,6 +88,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
         walletService.deleteWallet(user.getId());
+        portfolioService.deletePortfolio(user.getUsername());
         userRepository.deleteById(id);
     }
 
