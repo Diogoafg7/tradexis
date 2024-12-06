@@ -1,0 +1,41 @@
+<div class="relative">
+  <div class=""></div>
+
+  <div class="flex items-center justify-between px-6 py-4">
+    <div class="flex items-center space-x-3"></div>
+
+    <nav class="flex space-x-6 pr-10">
+      <a routerLink="/dashboard" class="text-white hover:text-gray-300 uppercase" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/transactions" class="text-white hover:text-gray-300 uppercase" routerLinkActive="active">Transações</a>
+      <a routerLink="/transaction-history" class="text-white hover:text-gray-300 uppercase" routerLinkActive="active">Histórico</a>
+      <a routerLink="/profile" class="text-white hover:text-gray-300 uppercase" routerLinkActive="active">Perfil</a>
+    </nav>
+
+    <div class="flex items-center space-x-6">
+      <button
+        (click)="navigateToUpdateProfile()"
+        class="w-10 h-10 rounded-full overflow-hidden border-2 border-white"
+      >
+        <img
+          *ngIf="userProfileImage; else defaultProfile"
+          [src]="userProfileImage"
+          alt="Profile Icon"
+          class="w-full h-full object-cover"
+        />
+        <ng-template #defaultProfile>
+          <div
+            class="w-full h-full flex items-center justify-center bg-gray-400 text-white font-semibold"
+          >
+            <span>DF</span>
+          </div>
+        </ng-template>
+      </button>
+
+      <div class="flex flex-col items-start">
+        <label class="text-white text-lg font-medium uppercase">Saldo</label>
+        <span class="text-white text-md font-semibold">100</span>
+      </div>
+      <img (click)="logout()" src="/assets/logout.png" class="w-10 h-10 text-gray-50">
+    </div>
+  </div>
+</div>

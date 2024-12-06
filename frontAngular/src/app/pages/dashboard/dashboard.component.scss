@@ -1,0 +1,36 @@
+.background-purple {
+    background-color: #7F4A88;
+    color: white;
+  }
+  .chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+  }
+
+  /* Botão "Comprar" */
+.btn {
+  background-color: #6b46c1; /* Roxo */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #553c9a; /* Roxo escuro */
+}
+
+.background-purple {
+  background-color: #6b46c1;
+}
+
+.focus\:ring-purple-500:focus {
+  outline: 2px solid #6b46c1;
+}
+
+.focus\:border-purple-500:focus {
+  border-color: #6b46c1;
+}

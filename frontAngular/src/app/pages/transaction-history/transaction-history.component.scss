@@ -1,0 +1,22 @@
+.background-purple {
+    background-color: #7F4A88;
+    color: white;
+  }
+
+  .active {
+    border: 2px solid #6b46c1; /* Borda roxa para indicar que está ativo */
+    box-shadow: 0 4px 10px rgba(107, 70, 193, 0.3); /* Sombra roxa para dar destaque */
+    transform: scale(1.05); /* Aumenta um pouco a escala para dar foco */
+  }
+  
+  /* Efeito de hover */
+  .bg-white:hover {
+    background-color: #f7fafc; /* Altera a cor de fundo ao passar o mouse */
+    transform: scale(1.02); /* Dá um pequeno aumento quando o usuário passa o mouse */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave */
+  }
+  
+  /* Transição suave para bordas e escala */
+  .transition-transform {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  }
