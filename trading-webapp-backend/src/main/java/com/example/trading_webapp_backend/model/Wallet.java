@@ -1,12 +1,15 @@
 package com.example.trading_webapp_backend.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "Wallets")
 public class Wallet {
+    //Getters and Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -48,33 +51,16 @@ public class Wallet {
                 '}';
     }
 
-    //Getters and Setters
-    public int getId() {
-        return id;
-    }
-
     public void setId(int id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
     public void setBalance(double balance) {
         this.balance = balance;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
