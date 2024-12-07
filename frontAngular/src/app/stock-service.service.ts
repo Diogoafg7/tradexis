@@ -42,19 +42,4 @@ export class StockServiceService {
       params: { symbol, price: price.toString(), timestamp },
     });
   }
-
-  // 6. Deletar um histórico de preço por ID
-  deleteStockHistory(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
-  }
-
-  // 7. Deletar históricos de preço por ID do ativo
-  deleteStockHistoriesByAssetId(assetId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete-by-asset-id/${assetId}`);
-  }
-
-  // 8. Deletar todos os históricos de preço
-  deleteAllStockHistories(): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete-all`);
-  }
 }
