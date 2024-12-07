@@ -35,7 +35,7 @@ public class WalletController {
         return ResponseEntity.ok(walletService.getBalanceById(Math.toIntExact(id)));
     }
 
-    @GetMapping("/balance/{user_id}")
+    @GetMapping("/user/{userId}/balance")
     public ResponseEntity<Wallet> getBalanceByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(walletService.getBalanceByUserId(Math.toIntExact(userId)));
     }
