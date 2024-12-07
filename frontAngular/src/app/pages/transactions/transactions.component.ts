@@ -27,20 +27,25 @@ export class TransactionsComponent {
       },
       (error) => {
         console.error('Erro ao carregar trades:', error);
+        // Exibição de mensagem de erro para o usuário (opcional)
+        alert('Erro ao carregar as transações.');
       }
     );
   }
 
   // Função para "vender" uma trade
   sellTrade(tradeId: number): void {
+    // Envia requisição DELETE para excluir a trade
     this.tradeService.deleteTrade(tradeId).subscribe(
       () => {
         // Remove a trade localmente após excluir
         this.trades = this.trades.filter((trade) => trade.id !== tradeId);
-        console.log(`Trade com ID ${tradeId} vendida!`);
+        console.log(`Trade com ID ${tradeId} vendida com sucesso!`);
       },
       (error) => {
         console.error(`Erro ao vender trade com ID ${tradeId}:`, error);
+        // Exibição de mensagem de erro para o usuário (opcional)
+        alert('Erro ao vender a transação.');
       }
     );
   }
