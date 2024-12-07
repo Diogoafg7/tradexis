@@ -42,4 +42,8 @@ export class StockServiceService {
       params: { symbol, price: price.toString(), timestamp },
     });
   }
+  // Adicionar um histórico de transação
+  addHistory(history: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/add`, history);
+  }
 }

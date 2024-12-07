@@ -13,15 +13,12 @@ import { TradeService } from '../../trade.service';
 })
 
 export class TransactionHistoryComponent {
-  trades: Trade[] = []; // Transações do endpoint de Trade
-  currentPrices: { [key: string]: number } = {}; // Preços atuais dos ativos
-  stockHistories: any[] = []; // Histórico de ações
-  stockDetails: any | null = null; // Detalhes do histórico selecionado
+  trades: Trade[] = [];
+  currentPrices: { [key: string]: number } = {}; // Armazena preços atuais dos ativos
+  stockHistories: any[] = [];
+  stockDetails: any | null = null;
 
-  constructor(
-    private stockHistoryService: StockServiceService,
-    private tradeService: TradeService
-  ) {}
+  constructor(private stockHistoryService: StockServiceService, private tradeService: TradeService) {}
 
   ngOnInit(): void {
     this.loadAllStockHistories();
@@ -29,23 +26,24 @@ export class TransactionHistoryComponent {
     this.tradeService.getAllTrades().subscribe((data: Trade[]) => {
       this.trades = data;
 
-      // Mock: Preços atuais dos ativos (você pode substituir por uma API real)
+      // Mock: Preços atuais dos ativos (simula o retorno de uma API de preços)
       this.currentPrices = {
         BTC: 50.0, // Preço atual do Bitcoin
-        ETH: 4000.0, // Preço atual do Ethereum
+        ETH: 4000.0 // Adicione outros ativos, se necessário
       };
     });
   }
-
-  // Carregar todos os históricos de ações
+  
+  // Carregar todos os históricos de preço
   loadAllStockHistories(): void {
     this.stockHistoryService.getAllStockHistories().subscribe((data) => {
       this.stockHistories = data;
       console.log(data, 'AllStocks');
     });
   }
-
-  // Obter detalhes de um histórico específico
+  
+  
+  // Obter detalhes de um único histórico
   getStockDetails(id: number): void {
     this.stockHistoryService.getStockHistoryById(id).subscribe((data) => {
       this.stockDetails = data;
@@ -53,36 +51,26 @@ export class TransactionHistoryComponent {
     });
   }
 
-  // Método para calcular lucro ou prejuízo de uma transação
-  calculateProfitOrLoss(stockHistory: any): string {
-    const currentPrice = this.currentPrices[stockHistory.asset.symbol];
+  // Método para calcular lucro ou prejuízo
+  calculateProfitOrLoss(trade: Trade): string {
+    const currentPrice = this.currentPrices[trade.asset.symbol];
     if (!currentPrice) return 'Preço atual não disponível';
 
-    // Encontrar as transações relacionadas ao ativo selecionado
-    const relatedTrades = this.trades.filter(
-      (trade) => trade.asset.symbol === stockHistory.asset.symbol
-    );
+    const purchasePrice = trade.asset.price;
+    const quantity = trade.quantity;
+    const tradeType = trade.tradeType.name;
 
-    let totalProfitOrLoss = 0;
-    relatedTrades.forEach((trade) => {
-      const purchasePrice = trade.asset.price;
-      const quantity = trade.quantity;
-      const tradeType = trade.tradeType.name;
+    let result: number;
+    if (tradeType === 'Buy') {
+      result = (currentPrice - purchasePrice) * quantity;
+    } else if (tradeType === 'Sell') {
+      result = (purchasePrice - currentPrice) * quantity;
+    } else {
+      return 'Tipo de transação inválido';
+    }
 
-      let result: number;
-      if (tradeType === 'Buy') {
-        result = (currentPrice - purchasePrice) * quantity;
-      } else if (tradeType === 'Sell') {
-        result = (purchasePrice - currentPrice) * quantity;
-      } else {
-        return; // Caso o tipo de transação seja inválido
-      }
-
-      totalProfitOrLoss += result;
-    });
-
-    return totalProfitOrLoss >= 0
-      ? `Lucro: ${totalProfitOrLoss.toFixed(2)}`
-      : `Prejuízo: ${totalProfitOrLoss.toFixed(2)}`;
+    return result >= 0
+      ? `Lucro: ${result.toFixed(2)}`
+      : `Prejuízo: ${result.toFixed(2)}`;
   }
 }
