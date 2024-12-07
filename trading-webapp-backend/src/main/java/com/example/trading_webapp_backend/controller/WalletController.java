@@ -116,6 +116,7 @@ public class WalletController {
     }
 
 
+
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
