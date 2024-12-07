@@ -122,4 +122,10 @@ public class CustomExceptions {
             super(message);
         }
     }
+
+    public static class InvalidAmountException extends RuntimeException {
+        public InvalidAmountException(String message) {
+            super(message);
+        }
+    }
 }

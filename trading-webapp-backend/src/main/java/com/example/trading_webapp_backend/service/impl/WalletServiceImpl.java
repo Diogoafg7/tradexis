@@ -1,5 +1,6 @@
 package com.example.trading_webapp_backend.service.impl;
 
+import com.example.trading_webapp_backend.dtos.WalletDTO;
 import com.example.trading_webapp_backend.exception.CustomExceptions;
 import com.example.trading_webapp_backend.model.User;
 import com.example.trading_webapp_backend.model.Wallet;
@@ -8,10 +9,9 @@ import com.example.trading_webapp_backend.repository.WalletRepository;
 import com.example.trading_webapp_backend.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.ArrayList;
 
 @Service
 public class WalletServiceImpl implements WalletService {
@@ -34,31 +34,43 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet getBalanceById(int id) {
-        return getWalletById(id); // Assuming the balance is within the wallet object
+    public Wallet getWalletByUsername(String username) {
+        return walletRepository.findByUsername(username)
+                .orElseThrow(() -> new CustomExceptions.ItemsNotFoundException("Wallet not found with username " + username));
     }
 
     @Override
-    public Wallet getBalanceByUserId(int userId) {
-        // Assuming Wallet has a userId property
-        return walletRepository.findByUser_Id(userId)
-                .orElseThrow(() -> new CustomExceptions.ItemsNotFoundException("Wallet not found with user id " + userId));
-    }
+    public Wallet addFundsToWallet(int walletId, double amount) {
+        // Verificar se o valor a ser adicionado é positivo
+        if (amount <= 0) {
+            throw new CustomExceptions.InvalidAmountException("Amount must be greater than zero");
+        }
 
-    @Override
-    public Wallet createWallet(Wallet wallet) {
+        // Procurar a wallet pelo id
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> new CustomExceptions.ItemsNotFoundException("Wallet not found with id " + walletId));
+
+        // Adicionar os fundos ao saldo existente
+        wallet.setBalance(wallet.getBalance() + amount);
+
+        // Salvar a wallet atualizada no banco
         return walletRepository.save(wallet);
     }
 
     @Override
-    public Wallet updateWalletById(int id, Wallet wallet) {
-        Wallet existingWallet = getWalletById(id);
-        if (existingWallet != null) {
-            existingWallet.setBalance(wallet.getBalance());
-            // Add other fields to update as necessary
-            return existingWallet;
-        }
-        return null;
+    public Wallet createWallet(WalletDTO dto) {
+        // Verifica se o user existe
+        User user = userRepository.findById(dto.getUser_id())
+                .orElseThrow(() -> new CustomExceptions.UserNotFoundException("User not found"));
+
+        // Criar a nova Wallet
+        Wallet wallet = new Wallet();
+        wallet.setId(dto.getId());
+        wallet.setUser(user);
+        wallet.setBalance(0);
+        wallet.setUpdatedAt(LocalDateTime.now());
+
+        return walletRepository.save(wallet);
     }
 
     @Override
@@ -66,38 +78,4 @@ public class WalletServiceImpl implements WalletService {
         walletRepository.deleteById(id);
     }
 
-    @Override
-    public Wallet getWalletByUserId(int userId) {
-        return walletRepository.findByUser_Id(userId)
-                .orElseThrow(() -> new CustomExceptions.ItemsNotFoundException("Wallet not found with user id " + userId));
-    }
-
-    @Override
-    public Wallet createWallet(int userId, double balance) {
-        Wallet wallet = new Wallet();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomExceptions.ItemsNotFoundException("User not found with id " + userId));
-        wallet.setUser(user);
-        wallet.setBalance(balance);
-        return walletRepository.save(wallet);
-    }
-
-    @Transactional
-    public Wallet updateWalletBalance(int userId, double balance) {
-        Wallet wallet = getWalletByUserId(userId);
-        wallet.setBalance(balance);
-        return walletRepository.save(wallet);
-    }
-
-
-    @Override
-    public void deleteWalletByUserId(int userId) {
-        Wallet wallet = getWalletByUserId(userId);
-        walletRepository.delete(wallet);
-    }
-
-    @Override
-    public void deleteAllWallets() {
-        walletRepository.deleteAll();
-    }
 }
