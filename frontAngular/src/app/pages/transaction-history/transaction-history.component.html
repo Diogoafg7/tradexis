@@ -1,76 +1,64 @@
-<app-header />
+<app-header></app-header>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-  <!-- Ações Disponíveis -->
+  <!-- Lista de Históricos de Preço -->
   <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-    <h2 class="text-lg font-semibold mb-4 text-gray-700">Ações Disponíveis</h2>
+    <h2 class="text-lg font-semibold mb-4 text-gray-700">Históricos de Preço</h2>
     <div class="space-y-4">
       <div
-        *ngFor="let acao of acoes; let i = index"
+        *ngFor="let history of stockHistories; let i = index"
         class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer transition-transform duration-300 ease-in-out"
-        [ngClass]="{'active': selectedIndex === i}"
-        (click)="mostrarDetalhes(i)" 
+        [ngClass]="{'active': stockDetails?.id === history.id}"
+        (click)="getStockDetails(history.id)"
       >
         <div class="flex items-center gap-4">
-          <div class="bg-purple-200 text-purple-700 rounded-full p-3">
-            🐷
+          <div class="bg-blue-200 text-blue-700 rounded-full p-3">
+            🏷️
           </div>
           <div>
-            <div class="text-lg font-bold text-gray-700">{{ acao.nome }}</div>
-            <div class="text-sm text-gray-500">{{ acao.sigla }}</div>
+            <div class="text-lg font-bold text-gray-700">{{ history.asset.name }}</div>
+            <div class="text-sm text-gray-500">Ticker: {{ history.asset.symbol }}</div>
           </div>
         </div>
         <div class="flex flex-col items-end">
-          <div class="text-lg font-bold text-gray-700">{{ acao.preco }}</div>
-          <div class="text-sm text-green-500">
-            {{ acao.diferenca }} <span class="text-gray-500">({{ acao.percentual }})</span>
+          <div class="text-lg font-bold text-gray-700">{{ history.price | currency }}</div>
+          <div class="text-sm text-gray-500">
+            {{ history.timestamp | date }}
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Detalhes da Transação -->
+  <!-- Detalhes do Histórico -->
   <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-    <h2 class="text-lg font-semibold mb-4 text-gray-700">Detalhes de transações</h2>
-    <div class="space-y-6">
-      <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200 max-w-lg mx-auto">
-        <h2 class="text-lg font-semibold mb-4 text-gray-700">Detalhes da Transação</h2>
-      
-        <div class="space-y-4" *ngIf="detalhesTransacao">
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Tipo:</span>
-            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.tipo }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Status:</span>
-            <span class="text-green-600 font-semibold">{{ detalhesTransacao.status }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Ação:</span>
-            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.nome }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Valor Investido:</span>
-            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.valorInvestido }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Preço de Execução:</span>
-            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.precoExecucao }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Quantidade:</span>
-            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.quantidade }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Submetida em:</span>
-            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.submetidaEm }}</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 font-medium">Resultado:</span>
-            <span class="text-gray-800 font-semibold">{{ detalhesTransacao.resultado }}</span>
-          </div>
+    <h2 class="text-lg font-semibold mb-4 text-gray-700">Detalhes do Histórico</h2>
+    <div class="space-y-6" *ngIf="stockDetails">
+      <div class="space-y-4">
+        
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600 font-medium">Ativo:</span>
+          <span class="text-gray-800 font-semibold">{{ stockDetails.asset.name }}</span>
         </div>
-      </section>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600 font-medium">Ticker:</span>
+          <span class="text-gray-800 font-semibold">{{ stockDetails.asset.symbol }}</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600 font-medium">Tipo de Ativo:</span>
+          <span class="text-gray-800 font-semibold">{{ stockDetails.assetTypeName }}</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600 font-medium">Preço:</span>
+          <span class="text-gray-800 font-semibold">{{ stockDetails.price | currency }} </span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600 font-medium">Data e Hora:</span>
+          <span class="text-gray-800 font-semibold">{{ stockDetails.timestamp | date: 'short' }}</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!stockDetails" class="text-gray-500 text-center">
+      Selecione um histórico para ver os detalhes.
     </div>
   </section>
 </div>
