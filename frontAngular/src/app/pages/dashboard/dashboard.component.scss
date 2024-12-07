@@ -1,7 +1,11 @@
-.background-purple {
+.background-purple1 {
     background-color: #7F4A88;
     color: white;
-  }
+}
+.background-purple1:hover {
+    background-color: #62256d;
+    color: white;
+}
   .chart-container {
     position: relative;
     height: 400px;

@@ -3,31 +3,37 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { CommonModule } from '@angular/common';
 import { TradeService } from '../../trade.service';
 import { StockServiceService } from '../../stock-service.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-transactions',
-  imports: [HeaderComponent, CommonModule],
+  imports: [HeaderComponent, CommonModule, FormsModule],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss'
 })
 export class TransactionsComponent {
-  trades: any[] = [];  // Transações ativas de compra
-  stockHistories: any[] = [];  // Histórico de transações
+  trades: any[] = []; // Todas as transações
+  filteredTrades: any[] = []; // Transações filtradas
+  searchQuery: string = ''; // Texto da barra de pesquisa
+  priceMin: number | null = null; // Filtro de preço mínimo
+  priceMax: number | null = null; // Filtro de preço máximo
+  variationFilter: string = ''; // Filtro de variação (positiva ou negativa)
 
   constructor(
     private tradeService: TradeService,
-    private stockHistoryService: StockServiceService  // Serviço para histórico
+    private stockHistoryService: StockServiceService
   ) {}
 
   ngOnInit(): void {
     this.loadTrades();
   }
 
-  // Carrega todas as trades usando o serviço
+  // Carrega todas as transações e inicializa a lista filtrada
   loadTrades(): void {
     this.tradeService.getAllTrades().subscribe(
       (data) => {
         this.trades = data;
+        this.filteredTrades = data; // Inicializa a lista filtrada com todas as transações
         console.log('Trades carregadas:', data);
       },
       (error) => {
@@ -37,12 +43,51 @@ export class TransactionsComponent {
     );
   }
 
-  // Função para "vender" uma trade
+  // Filtra as transações com base na pesquisa e nos filtros
+  filterTrades(): void {
+    this.filteredTrades = this.trades.filter((trade) => {
+      // Verifica se corresponde ao texto de pesquisa
+      const matchesSearch =
+        !this.searchQuery ||
+        trade.asset.name
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase()) ||
+        trade.asset.symbol
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
+
+      // Verifica o preço mínimo e máximo
+      const matchesPriceMin =
+        this.priceMin === null || trade.price >= this.priceMin;
+      const matchesPriceMax =
+        this.priceMax === null || trade.price <= this.priceMax;
+
+      // Verifica a variação
+      const matchesVariation =
+        !this.variationFilter ||
+        (this.variationFilter === 'positive' && trade.changePercentage >= 0) ||
+        (this.variationFilter === 'negative' && trade.changePercentage < 0);
+
+      // Retorna true se todos os critérios forem atendidos
+      return matchesSearch && matchesPriceMin && matchesPriceMax && matchesVariation;
+    });
+  }
+
+  // Limpa os filtros
+  clearFilters(): void {
+    this.searchQuery = '';
+    this.priceMin = null;
+    this.priceMax = null;
+    this.variationFilter = '';
+    this.filterTrades(); // Atualiza a lista de transações filtradas
+  }
+
+  // Função para "vender" uma transação
   sellTrade(tradeId: number): void {
     const tradeToSell = this.trades.find((trade) => trade.id === tradeId);
     if (!tradeToSell) return;
 
-    // Calcular o preço médio de compra de todas as compras anteriores do ativo
+    // Calcula o preço médio de compra
     const totalQuantity = this.trades
       .filter((trade) => trade.assetId === tradeToSell.assetId)
       .reduce((acc, trade) => acc + trade.quantity, 0);
@@ -53,36 +98,38 @@ export class TransactionsComponent {
 
     const averagePrice = totalCost / totalQuantity;
 
-    // Agora calculamos o lucro ou prejuízo com base no preço da venda
-    const sellPrice = tradeToSell.price;  // Preço de venda
+    // Lucro ou prejuízo
+    const sellPrice = tradeToSell.price;
     const quantitySold = tradeToSell.quantity;
-
     const profitOrLoss = (sellPrice - averagePrice) * quantitySold;
 
-    // Gravar no histórico
-    this.stockHistoryService.addHistory({
-      assetId: tradeToSell.assetd,
-      assetName: tradeToSell.assetName,
-      assetSymbol: tradeToSell.assetSymbol,
-      assetTypeName: tradeToSell.assetTypeName,
-      price: sellPrice,
-      timestamp: new Date(),
-      tradeType: 'Sell',
-      profitOrLoss: profitOrLoss,
-      quantity: quantitySold
-    }).subscribe(
-      (historyData) => {
-        console.log('Histórico de transação gravado:', historyData);
-      },
-      (error) => {
-        console.error('Erro ao gravar no histórico:', error);
-      }
-    );
+    // Grava no histórico
+    this.stockHistoryService
+      .addHistory({
+        assetId: tradeToSell.assetId,
+        assetName: tradeToSell.asset.name,
+        assetSymbol: tradeToSell.asset.symbol,
+        assetTypeName: tradeToSell.asset.typeName,
+        price: sellPrice,
+        timestamp: new Date(),
+        tradeType: 'Sell',
+        profitOrLoss: profitOrLoss,
+        quantity: quantitySold,
+      })
+      .subscribe(
+        (historyData) => {
+          console.log('Histórico de transação gravado:', historyData);
+        },
+        (error) => {
+          console.error('Erro ao gravar no histórico:', error);
+        }
+      );
 
-    // Excluir a trade
+    // Remove a transação vendida
     this.tradeService.deleteTrade(tradeId).subscribe(
       () => {
         this.trades = this.trades.filter((trade) => trade.id !== tradeId);
+        this.filterTrades(); // Atualiza a lista filtrada após a venda
         console.log(`Trade com ID ${tradeId} vendida com sucesso!`);
       },
       (error) => {
