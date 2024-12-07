@@ -11,6 +11,12 @@ interface SigninRequest {
 }
 
 
+interface UserData {
+  username: string;
+  email: string;
+  password: string;
+}
+
 interface JwtAuthenticationResponse {
   token: string;
   user: {
@@ -43,8 +49,10 @@ export class AuthService {
     return this.httpClient.post<JwtAuthenticationResponse>(this.apiUrl, signinRequest);
   }
 
-  register(userData: any): Observable<any> {
-    return this.httpClient.post(`${this.apiSingupUrl}/signup`, userData);
+  register(userData: UserData): Observable<any> {
+    return this.httpClient.post('http://localhost:8080/auth/signup', userData, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    });
   }
 
  
