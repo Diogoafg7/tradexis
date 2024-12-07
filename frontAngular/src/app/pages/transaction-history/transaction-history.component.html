@@ -5,9 +5,9 @@
     <h2 class="text-lg font-semibold mb-4 text-gray-700">Históricos de Transações Feitas</h2>
     <div class="space-y-4">
       <div
-        *ngFor="let history of stockHistories; let i = index"
+        *ngFor="let history of stockHistories"
         class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer transition-transform duration-300 ease-in-out"
-        [ngClass]="{'active': stockDetails?.id === history.id}"
+        [ngClass]="{ 'active': stockDetails?.id === history.id }"
         (click)="getStockDetails(history.id)"
       >
         <div class="flex items-center gap-4">
@@ -49,15 +49,23 @@
         </div>
         <div class="flex justify-between items-center">
           <span class="text-gray-600 font-medium">Preço:</span>
-          <span class="text-gray-800 font-semibold">{{ stockDetails.price | currency }} </span>
+          <span class="text-gray-800 font-semibold">{{ stockDetails.price | currency }}</span>
         </div>
         <div class="flex justify-between items-center">
           <span class="text-gray-600 font-medium">Data e Hora:</span>
           <span class="text-gray-800 font-semibold">{{ stockDetails.timestamp | date: 'short' }}</span>
         </div>
         <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Ganhos ou Perdas</span>
-          <span class="text-gray-800 font-semibold"> *REVER CÁLCULOS {{ stockDetails.price | currency }}</span>
+          <span class="text-gray-600 font-medium">Ganhos ou Perdas:</span>
+          <span 
+            class="font-semibold"
+            [ngClass]="{
+              'text-green-500': calculateProfitOrLoss(stockDetails).includes('Lucro'),
+              'text-red-500': calculateProfitOrLoss(stockDetails).includes('Prejuízo')
+            }"
+          >
+            {{ calculateProfitOrLoss(stockDetails) }}
+          </span>
         </div>
       </div>
     </div>
