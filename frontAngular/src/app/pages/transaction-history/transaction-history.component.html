@@ -2,7 +2,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
   <!-- Lista de Históricos de Preço -->
   <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-    <h2 class="text-lg font-semibold mb-4 text-gray-700">Históricos de Preço</h2>
+    <h2 class="text-lg font-semibold mb-4 text-gray-700">Históricos de Transações Feitas</h2>
     <div class="space-y-4">
       <div
         *ngFor="let history of stockHistories; let i = index"
@@ -54,6 +54,10 @@
         <div class="flex justify-between items-center">
           <span class="text-gray-600 font-medium">Data e Hora:</span>
           <span class="text-gray-800 font-semibold">{{ stockDetails.timestamp | date: 'short' }}</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600 font-medium">Ganhos ou Perdas</span>
+          <span class="text-gray-800 font-semibold"> *REVER CÁLCULOS {{ stockDetails.price | currency }}</span>
         </div>
       </div>
     </div>
