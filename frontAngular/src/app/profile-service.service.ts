@@ -22,6 +22,11 @@ export class ProfileServiceService {
     }
   }
 
+  getCurrentUserId(): any | null {
+    const userId = localStorage.getItem('user_id'); // Retrieve user ID from localStorage
+    return userId ? +userId : null; // Convert to number or return null if not found
+  }
+
  
   updateCurrentUser(profile: Profile): Observable<Profile> {
     return this.httpClient.put<Profile>(`${this.baseUrl}/me`, profile, {
