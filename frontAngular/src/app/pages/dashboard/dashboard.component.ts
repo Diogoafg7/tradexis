@@ -1,82 +1,93 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component,OnInit , ChangeDetectionStrategy } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
-import { ApexChart, ChartType, ApexAxisChartSeries, ApexTitleSubtitle, ApexXAxis } from 'ngx-apexcharts';
-import { NgxApexchartsModule } from 'ngx-apexcharts';
+//import { ApexChart, ChartType, ApexAxisChartSeries, ApexTitleSubtitle, ApexXAxis } from 'ngx-apexcharts';
+//import { NgxApexchartsModule } from 'ngx-apexcharts';
+import { AssetService } from '../../asset.service';
+
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, NgIf, FormsModule, NgClass, NgxApexchartsModule, HeaderComponent],
+  imports: [NgFor, NgIf, FormsModule,  /*NgxApexchartsModule, */ HeaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush, // Melhora a performance
+ // changeDetection: ChangeDetectionStrategy.OnPush, 
 })
-export class DashboardComponent {
-  stocks = [
-    {
-      name: 'TESLA',
-      symbol: 'TSLA',
-      price: 336.09,
-      change: 0.07,
-      daily: '0.21%',
-      chartData: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-    },
-    {
-      name: 'AMAZON',
-      symbol: 'AMZN',
-      price: 3250.10,
-      change: -0.15,
-      daily: '1.08%',
-      chartData: [20, 50, 45, 60, 70, 80, 90, 110, 140],
-    },
-  ];
-
+export class DashboardComponent  {
+ stocks: any[] = [ 
+  // {
+  //   name: 'TESLA',
+  //   symbol: 'TSLA',
+  //   price: 336.09,
+  //   change: 0.07,
+  //   daily: '0.21%',
+  //   chartData: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+  // }
+];
   selectedStock: any = null;
-  buyAmount: number | null = null;
+  buyAmount: number = 0;
 
-  // Alternar exibição da seção de compra
-  toggleBuySection(stock: any) {
+
+  constructor(private assetService: AssetService) {}
+
+  ngOnInit(): void {
+    this.loadAssets();
+    console.log('oninit' );
+  }
+
+  
+  loadAssets(): void {
+    this.assetService.getAssets().subscribe(
+      (data) => {
+        this.stocks = data;
+        console.log('Fetched dataIn:', data);
+      },
+      (error) => {
+        console.error('Error fetching assets', error);
+      }
+    );
+  }
+
+  
+
+  toggleBuySection(stock: any): void {
     this.selectedStock = this.selectedStock === stock ? null : stock;
   }
 
-  // Confirmação de compra
-  confirmPurchase(stock: any) {
-    if (this.buyAmount && this.buyAmount > 0) {
-      alert(`Compra confirmada: ${this.buyAmount} ações de ${stock.name}`);
-      this.buyAmount = null;
-      this.selectedStock = null;
-    } else {
-      alert('Por favor, insira um valor válido.');
-    }
+  confirmPurchase(stock: any): void {
+    console.log('Purchasing', this.buyAmount, 'of', stock.symbol);
+    // Add purchase logic here
   }
 
-  // Configuração de gráfico estático (uma vez por ação)
-  getChartOptions(): {
-    series: ApexAxisChartSeries;
-    chart: ApexChart;
-    title: ApexTitleSubtitle;
-    xaxis: ApexXAxis;
-  } {
-    return {
-      series: [
-        {
-          name: 'Exemplo',
-          data: [10, 20, 30, 40], // Dados estáticos para teste
-        },
-      ],
-      chart: {
-        type: 'line',
-        height: 300,
-        animations: { enabled: false },
-      },
-      title: {
-        text: 'Gráfico de Teste',
-        align: 'left',
-      },
-      xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr'],
-      },
-    };
-  }
+
+
+   // Configuração de gráfico estático (uma vez por ação)
+  //  getChartOptions(): {
+  //    series: ApexAxisChartSeries;
+  //    chart: ApexChart;
+  //    title: ApexTitleSubtitle;
+  //    xaxis: ApexXAxis;
+  //  } {
+  //    return {
+  //      series: [
+  //        {
+  //          name: 'Exemplo',
+  //          data: [10, 20, 30, 40], // Dados estáticos para teste
+  //        },
+  //      ],
+  //      chart: {
+  //        type: 'line',
+  //        height: 300,
+  //        animations: { enabled: false },
+  //      },
+  //      title: {
+  //        text: 'Gráfico de Teste',
+  //        align: 'left',
+  //      },
+  //      xaxis: {
+  //        categories: ['Jan', 'Feb', 'Mar', 'Apr'],
+  //      },
+  //    };
+  //  }
 }

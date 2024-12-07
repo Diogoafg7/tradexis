@@ -4,10 +4,12 @@
   <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
     <h2 class="text-lg font-semibold mb-4 text-gray-700">Ações Disponíveis</h2>
     <div class="space-y-4">
+    
       <div
         *ngFor="let stock of stocks"
         class="flex flex-col bg-white p-4 rounded-lg shadow-sm border border-gray-200"
       >
+  
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-4">
             <div class="bg-purple-200 text-purple-700 rounded-full p-3">🐷</div>
@@ -16,12 +18,9 @@
               <div class="text-sm text-gray-500">{{ stock.symbol }}</div>
             </div>
           </div>
-
           <div class="flex flex-col items-end">
             <div class="text-lg font-bold text-gray-700">${{ stock.price }}</div>
-            <div [ngClass]="stock.symbol" class="text-sm">
-              {{ stock.change }}% <span class="text-gray-500">({{ stock.daily }})</span>
-            </div>
+            <div class="text-sm">{{ stock.change }}%</div>
             <button
               class="btn background-purple mt-2"
               (click)="toggleBuySection(stock)"
@@ -30,7 +29,6 @@
             </button>
           </div>
         </div>
-
         <div
           *ngIf="selectedStock === stock"
           class="mt-4 p-4 bg-gray-100 rounded-lg border border-gray-300"
@@ -57,7 +55,7 @@
   </section>
 
   <!-- Gráfico -->
-  <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+  <!-- <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
     <h2 class="text-lg font-semibold mb-4 text-gray-700">Gráfico Atual</h2>
     <div class="space-y-6">
       <div class="chart-container">
@@ -69,5 +67,5 @@
         ></apx-chart>
       </div>
     </div>
-  </section>
+  </section> -->
 </div>
