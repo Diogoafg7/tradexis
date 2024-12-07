@@ -16,6 +16,7 @@ import com.example.trading_webapp_backend.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin
@@ -29,12 +30,21 @@ public class AuthenticationController {
     private final UserAuthService userAuthService;
 
     @PostMapping("/signup")
-    public ResponseEntity<JwtAuthenticationResponse> signup(@Valid @RequestBody SignUpRequest request) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignUpRequest request) {
         try {
-            return ResponseEntity.ok(authenticationService.signup(request));
+            authenticationService.signup(request); 
+
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Signup successful! Please log in.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            log.error("Erro ao tentar registrar usuário: ", e);
-            return ResponseEntity.status(401).body(null);
+            log.error("Error during signup:", e);
+
+            
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Signup failed: " + e.getMessage());
+            return ResponseEntity.status(400).body(errorResponse);
         }
     }
 

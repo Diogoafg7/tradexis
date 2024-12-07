@@ -20,6 +20,7 @@ export class RegisterComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  
   register() {
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Passwords do not match!';
@@ -27,21 +28,28 @@ export class RegisterComponent {
     }
 
     const userData = {
-      username: this.username,
-      email: this.email,
-      password: this.password,
+      username: this.username.trim(),
+      email: this.email.trim(),
+      password: this.password.trim()
     };
 
+    //console.log('Payload:', userData);
+
+    this.errorMessage = '';
+
+    
+
     this.authService.register(userData).subscribe(
-      (response) => {
-        this.successMessage = 'Registration successful! Please log in.';
-        this.errorMessage = '';
-        setTimeout(() => this.router.navigate(['/login']), 2000);
-      },
-      (error) => {
-        this.errorMessage = error.error.message || 'Registration failed. Please try again.';
-        this.successMessage = '';
-      }
-    );
+  (response) => {
+    this.successMessage = 'Registration successful! Please log in.';
+    this.errorMessage = '';
+    setTimeout(() => this.router.navigate(['/login']), 2000);
+  },
+  (error) => {
+    console.error('Error Response:', error); // Log the error
+    this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+    this.successMessage = '';
+  }
+);
   }
 }
