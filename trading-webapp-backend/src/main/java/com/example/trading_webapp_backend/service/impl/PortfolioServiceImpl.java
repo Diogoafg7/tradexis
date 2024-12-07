@@ -41,8 +41,13 @@ public class PortfolioServiceImpl implements PortfolioService {
     public void createPortfolio(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Portfolio portfolio = Portfolio.builder().user(user).quantity(0.0).build();
-        portfolioRepository.save(portfolio);
+        List<Assets> assets = assetsService.getAllAssets();
+
+        for (Assets asset : assets) {
+            Portfolio portfolio = Portfolio.builder().user(user).asset(asset).quantity(0.0).build();
+            portfolioRepository.save(portfolio);
+        }
+
     }
 
     @Override

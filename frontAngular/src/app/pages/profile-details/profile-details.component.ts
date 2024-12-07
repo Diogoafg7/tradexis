@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ProfileServiceService } from '../../profile-service.service';
+import { Profile } from '../../models/profile';
 
 @Component({
   selector: 'app-profile-details',
@@ -10,17 +12,33 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProfileDetailsComponent {
 
-  id: string | null = null;  // Para armazenar o id do parâmetro da URL
+  profile: Profile | null = null;  
+  id: string | null = null;  
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private profileService: ProfileServiceService
+  ) {}
 
   ngOnInit(): void {
-    // Captura o id da URL
+    
     this.route.paramMap.subscribe(params => {
-      this.id = params.get('id'); // 'id' deve corresponder ao parâmetro da rota '/profile-details/:id'
-      console.log('Perfil ID:', this.id); // Aqui você pode usar o ID para buscar os dados do perfil
+      this.id = params.get('id');
+      if (this.id) {
+        
+        this.profileService.getCurrentUser().subscribe({
+          next: (data) => {
+            this.profile = data;
+            //console.log('Profile Data:', this.profile);
+          },
+          error: (error) => {
+            console.error('Error fetching profile:', error);
+          }
+        });
+      }
     });
   }
+
   focusInput(inputElement: HTMLInputElement) {
     inputElement.focus();
   }
