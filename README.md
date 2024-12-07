@@ -35,3 +35,51 @@ O **Tradexis** é uma plataforma que permite aos utilizadores simular transaçõ
 ├── database/      # Scripts e definições da base de dados
 ├── docker/        # Configurações de containers Docker
 └── README.md      # Documentação do repositório
+```
+
+## 🐳 Como Correr a Aplicação com Docker
+
+### Pré-requisitos
+- **Docker**: Certifique-se de que o Docker está instalado e em execução na sua máquina.
+- **Docker Compose**: Instale o Docker Compose (geralmente incluído no Docker Desktop).
+
+---
+
+### Passos para Configuração
+
+1. Clone o repositório do projeto:
+   ```bash
+   git clone https://github.com/seu-username/tradexis.git
+   cd tradexis
+    ```
+   
+2. Certifique-se de que as portas necessárias (ex.: 8080 para o backend, 4200 para o frontend) estão livres.
+
+3. Crie e suba os containers utilizando o Docker Compose:
+   ```bash
+   docker-compose up --build
+   ```
+   
+4. Aguarde até que todos os serviços estejam em execução. Poderá verificar o status no terminal.
+
+5. Aceda à aplicação: [http://localhost:8080](http://localhost:8080)
+
+6. Para executar a aplicação do frontend, utilize o comando noutro terminal:
+    ```bash
+    cd frontAngular
+    npm install
+    ng serve
+    ```
+
+7. Aceda à aplicação do frontend: [http://localhost:4200](http://localhost:4200)
+
+8. Para parar a execução do backend, utilize o comando:
+   ```bash
+   docker-compose down
+   ```
+   
+9. Para parar a execução do frontend, utilize o comando:
+   ```bash
+    Ctrl + C
+    ```
+---
