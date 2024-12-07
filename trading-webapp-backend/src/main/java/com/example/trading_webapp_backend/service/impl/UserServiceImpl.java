@@ -1,10 +1,13 @@
 package com.example.trading_webapp_backend.service.impl;
 
 import com.example.trading_webapp_backend.model.User;
+import com.example.trading_webapp_backend.model.Wallet;
 import com.example.trading_webapp_backend.repository.UserRepository;
+import com.example.trading_webapp_backend.service.PortfolioService;
 import com.example.trading_webapp_backend.service.UserService;
 import com.example.trading_webapp_backend.exception.CustomExceptions.UserCreationException;
 import com.example.trading_webapp_backend.exception.CustomExceptions.UserNotFoundException;
+import com.example.trading_webapp_backend.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private WalletService walletService;
 
     @Override
     public List<User> getAllUsers() {
@@ -39,12 +45,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        Optional<Optional<User>> userOptional = Optional.ofNullable(userRepository.findByUsername(user.getUsername()));
-        if (userOptional.isPresent()) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new UserCreationException("Username already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Criar carteira e portfólio
+        walletService.createWallet(savedUser.getId(), 0.0);
+        return savedUser;
     }
 
     @Override
@@ -71,6 +80,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
+        walletService.deleteWallet(user.getId());
         userRepository.deleteById(id);
     }
 
@@ -79,10 +91,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new UserNotFoundException("Old password is incorrect");
+            throw new IllegalArgumentException("Old password is incorrect");
         }
         user.setPassword(passwordEncoder.encode(password));
         return userRepository.save(user);
     }
-
 }
