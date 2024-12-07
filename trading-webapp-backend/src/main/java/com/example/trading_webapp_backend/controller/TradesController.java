@@ -58,7 +58,7 @@ public class TradesController {
 
     //deleteTrade
     @DeleteMapping("/delete/{id}")
-    public void deleteTrade(int id) {
+    public void deleteTrade(@PathVariable int id) {
         tradesService.deleteTrade(id);
     }
 

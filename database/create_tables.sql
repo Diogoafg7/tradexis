@@ -1,7 +1,16 @@
-CREATE DATABASE IF NOT EXISTS trading_db;
+-- Criar a base de dados
+--CREATE DATABASE IF NOT EXISTS trading_db;
 
+-- Apagar a base de dados existente
+DROP DATABASE IF EXISTS trading_db;
+
+-- Criar a base de dados
+CREATE DATABASE trading_db;
+
+-- Selecionar a base de dados
 USE trading_db;
 
+-- Criar tabelas
 -- Tabela Users
 CREATE TABLE IF NOT EXISTS Users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Assets (
   type_id INT NOT NULL,
   price DECIMAL(10,2) DEFAULT 0.00 NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (type_id) REFERENCES Type_Assets(id)
+  FOREIGN KEY (type_id) REFERENCES Type_Assets(id) ON DELETE CASCADE
 );
 
 -- Tabela Type_Trades
@@ -46,9 +55,9 @@ CREATE TABLE IF NOT EXISTS Trades (
   quantity DECIMAL(10,2) NOT NULL,
   total DECIMAL(10,2) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES Users(id),
-  FOREIGN KEY (asset_id) REFERENCES Assets(id),
-  FOREIGN KEY (trade_type_id) REFERENCES Type_Trades(id)
+  FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (asset_id) REFERENCES Assets(id) ON DELETE CASCADE,
+  FOREIGN KEY (trade_type_id) REFERENCES Type_Trades(id) ON DELETE CASCADE
 );
 
 -- Tabela Wallets
@@ -57,7 +66,7 @@ CREATE TABLE IF NOT EXISTS Wallets (
   user_id INT UNIQUE NOT NULL,
   balance DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES Users(id)
+  FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 -- Tabela StockHistory
@@ -66,5 +75,16 @@ CREATE TABLE IF NOT EXISTS StockHistory (
   asset_id INT NOT NULL,
   price DECIMAL(10,2) NOT NULL,
   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (asset_id) REFERENCES Assets(id)
+  FOREIGN KEY (asset_id) REFERENCES Assets(id) ON DELETE CASCADE
+);
+
+-- Tabela Portfolio
+CREATE TABLE IF NOT EXISTS Portfolio (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  asset_id INT NOT NULL,
+  quantity DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (asset_id) REFERENCES Assets(id) ON DELETE CASCADE,
+  UNIQUE (user_id, asset_id)
 );

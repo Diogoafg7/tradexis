@@ -1,5 +1,7 @@
 package com.example.trading_webapp_backend.service.impl;
 
+import com.example.trading_webapp_backend.service.PortfolioService;
+import com.example.trading_webapp_backend.service.WalletService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +24,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final WalletService walletService;
+    private final PortfolioService portfolioService;
 
     @Override
     public JwtAuthenticationResponse signup(SignUpRequest request) {
@@ -30,7 +34,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        walletService.createWallet(savedUser.getId(), 0.0);
+        portfolioService.createPortfolio(savedUser.getUsername());
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).user(user).build();
     }
