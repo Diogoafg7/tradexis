@@ -30,4 +30,10 @@ public class Type_Assets {
     public Type_Assets(String name) {
         this.name = name;
     }
+
+    //prePersist
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

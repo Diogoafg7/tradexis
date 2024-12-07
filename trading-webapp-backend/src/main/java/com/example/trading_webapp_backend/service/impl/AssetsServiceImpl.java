@@ -3,6 +3,7 @@ package com.example.trading_webapp_backend.service.impl;
 import com.example.trading_webapp_backend.model.Assets;
 import com.example.trading_webapp_backend.model.Type_Assets;
 import com.example.trading_webapp_backend.repository.AssetsRepository;
+import com.example.trading_webapp_backend.repository.StockHistoryRepository;
 import com.example.trading_webapp_backend.repository.Type_AssetsRepository;
 import com.example.trading_webapp_backend.service.AssetsService;
 import com.example.trading_webapp_backend.service.StockHistoryService;
@@ -45,6 +46,9 @@ public class AssetsServiceImpl implements AssetsService {
 
     @Autowired
     private Type_AssetsService typeAssetsService;
+
+    @Autowired
+    private StockHistoryRepository stockHistoryRepository;
 
     @Autowired
     private StockHistoryService stockHistoryService;
@@ -231,7 +235,13 @@ public class AssetsServiceImpl implements AssetsService {
                     asset.setSymbol(symbol);
                     asset.setPrice(0.0); // Preço inicial como 0
                     Type_Assets stockType = typeAssetsService.getTypeAssetByName("Stock");
-                    asset.setTypeId(stockType);
+                    if (stockType == null) {
+                        Type_Assets newType = new Type_Assets("Stock");
+                        typeAssetsRepository.save(newType);
+                        asset.setTypeId(newType);
+                    } else {
+                        asset.setTypeId(stockType);
+                    }
                 }
 
                 asset.setName(name);
@@ -274,6 +284,15 @@ public class AssetsServiceImpl implements AssetsService {
 
     @Override
     public void deleteAllAssets() {
+        // Limpa o histórico de preços antes de apagar os ativos
+        stockHistoryRepository.deleteAll();
         assetsRepository.deleteAll();
+    }
+
+    @Override
+    public void deleteAssetById(int id) {
+        // Limpa o histórico de preços antes de apagar os ativos
+        stockHistoryService.deleteStockHistoryByAssetId(id);
+        assetsRepository.deleteById(id);
     }
 }
