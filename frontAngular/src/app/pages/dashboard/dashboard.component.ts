@@ -31,11 +31,13 @@ export class DashboardComponent  {
   loadAssets(): void {
     this.assetService.getAssets().subscribe(
       (data) => {
-        this.stocks = data.map((stock) => ({
-          ...stock,
-          id: stock.assetId, // Map `assetId` from backend to `id` for consistency
-        }));
+        this.stocks = data;
+        // .map((stock) => ({
+        //   ...stock,
+        //   id: stock.assetId, // Map `assetId` from backend to `id` for consistency
+        // }));
         console.log('Fetched data:', this.stocks);
+        
       },
       (error) => {
         console.error('Error fetching assets', error);
@@ -54,9 +56,11 @@ export class DashboardComponent  {
   }
 
   confirmPurchase(stock: any): void {
-    const userId = 1; // Replace with the actual user ID (e.g., from authentication context)
-    const assetId = stock.id; // Ensure each stock has an `id` field
-    const tradeTypeName = 'BUY'; // Assuming "BUY" for this example
+    const userId = this.profileService.getCurrentUserId(); 
+    //console.log('userid', userId );
+    const assetId = stock.id; 
+    //console.log('assetId', assetId );
+    const tradeTypeName = 'BUY'; 
     const quantity = this.buyAmount;
   
     if (quantity <= 0) {
@@ -68,7 +72,7 @@ export class DashboardComponent  {
       (response) => {
         console.log('Trade added successfully:', response);
         alert('Trade successfully submitted!');
-        // Optional: Reset form or other UI elements
+        // Reset  page elements
         this.selectedStock = null;
         this.buyAmount = 0;
       },

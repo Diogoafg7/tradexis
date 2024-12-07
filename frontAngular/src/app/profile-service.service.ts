@@ -8,13 +8,13 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class ProfileServiceService {
-  private baseUrl = 'http://localhost:8080/users'; // Adjust base URL if needed
+  private baseUrl = 'http://localhost:8080/users';
 
   constructor(private httpClient: HttpClient) {}
 
   
   getCurrentUser(): Observable<Profile> {
-    const userId = localStorage.getItem('user_id');  // Retrieve user ID from localStorage
+    const userId = localStorage.getItem('user_id'); 
     if (userId) {
       return this.httpClient.get<Profile>(`${this.baseUrl}/${userId}`);
     } else {
@@ -23,8 +23,8 @@ export class ProfileServiceService {
   }
 
   getCurrentUserId(): any | null {
-    const userId = localStorage.getItem('user_id'); // Retrieve user ID from localStorage
-    return userId ? +userId : null; // Convert to number or return null if not found
+    const userId = localStorage.getItem('user_id'); 
+    return userId ? +userId : null; 
   }
 
  
