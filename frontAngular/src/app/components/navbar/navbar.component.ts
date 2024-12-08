@@ -17,11 +17,11 @@ export class NavbarComponent {
   userProfileImage = this.bHorseProfile;
   isLoggedIn: boolean = false;
 
-  balance: number = 0; // Inicialize a propriedade 'balance'
-  amountToAdd: number = 0; // Valor a ser adicionado
-  showAddFundsPopup: boolean = false; // Controle do popup
-  
-  constructor(private router: Router, private authService: AuthService, private walletService: WalletService, private cdRef: ChangeDetectorRef ) {
+  balance: number = 0;
+  amountToAdd: number = 0;
+  showAddFundsPopup: boolean = false;
+
+  constructor(private router: Router, private authService: AuthService, private walletService: WalletService, private cdRef: ChangeDetectorRef) {
     this.isLoggedIn = this.authService.isLoggedIn();
   }
 
@@ -32,7 +32,7 @@ export class NavbarComponent {
   logout() {
     this.authService.logout();
     this.isLoggedIn = false;
-    this.router.navigate(['/login']); 
+    this.router.navigate(['/login']);
   }
 
   ngOnInit(): void {
@@ -41,16 +41,16 @@ export class NavbarComponent {
       throw new Error('User ID não encontrado no localStorage');
     }
 
-    const userId = Number(userIdString); // Converte string para número
+    const userId = Number(userIdString);
     if (isNaN(userId)) {
       throw new Error('User ID inválido');
     }
 
     this.walletService.getBalanceByUserId(userId).subscribe({
       next: (data) => {
-        this.balance = data.balance; // Atualiza a propriedade 'balance'
+        this.balance = data.balance;
         console.log('Balance:', this.balance);
-        this.cdRef.detectChanges(); 
+        this.cdRef.detectChanges();
       },
       error: (err) => {
         console.error('Erro ao procurar o balance:', err);
@@ -58,21 +58,45 @@ export class NavbarComponent {
     });
   }
 
-  // Função para abrir o popup
   openAddFundsPopup(): void {
     this.showAddFundsPopup = true;
   }
 
-  // Função para fechar o popup
   closeAddFundsPopup(): void {
     this.showAddFundsPopup = false;
   }
 
-  // Função para adicionar fundos
   addFunds(): void {
     if (this.amountToAdd <= 0) {
       alert('Por favor, insira um valor válido');
       return;
     }
+
+    const userIdString = localStorage.getItem('user_id');
+    if (!userIdString) {
+      alert('Usuário não identificado. Por favor, faça login novamente.');
+      return;
+    }
+
+    const userId = Number(userIdString);
+    if (isNaN(userId)) {
+      alert('ID do usuário inválido.');
+      return;
+    }
+
+    const newBalance = this.balance + this.amountToAdd;
+
+    this.walletService.updateWalletById(userId, newBalance).subscribe({
+      next: () => {
+        alert('Fundos adicionados com sucesso!');
+        this.balance = newBalance;
+        this.amountToAdd = 0;
+        this.closeAddFundsPopup();
+      },
+      error: (err) => {
+        console.error('Erro ao adicionar fundos:', err);
+        alert('Não foi possível adicionar fundos. Tente novamente mais tarde.');
+      },
+    });
   }
 }
