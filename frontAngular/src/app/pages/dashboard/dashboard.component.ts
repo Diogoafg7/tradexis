@@ -5,10 +5,11 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { ApexChart, ChartType, ApexAxisChartSeries, ApexTitleSubtitle, ApexXAxis } from 'ngx-apexcharts';
 import { NgxApexchartsModule } from 'ngx-apexcharts';
 import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
+import { GraphicComponent } from "../../components/graphic/graphic.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, FormsModule, NgClass, NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent],
+  imports: [NgFor, FormsModule, NgClass, NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent, GraphicComponent, GraphicComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush, // Melhora a performance

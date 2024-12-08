@@ -1,7 +1,9 @@
 <app-header></app-header>
 
-<!-- Lista de Ações -->
+<!-- Layout com duas colunas -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50">
+  
+  <!-- Coluna para a Lista de Ações -->
   <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300">
     <h2 class="text-lg font-semibold mb-4 text-gray-700 flex items-center space-x-2">
       <i class="fas fa-list-alt text-blue-500"></i>
@@ -47,6 +49,12 @@
       </div>
     </div>
   </section>
+
+  <!-- Coluna para o Gráfico -->
+  <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300">
+    <app-graphic></app-graphic>
+  </section>
+
 </div>
 
-<app-rodape-acoes class="">
+<app-rodape-acoes class=""></app-rodape-acoes>
