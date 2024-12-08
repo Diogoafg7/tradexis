@@ -6,7 +6,7 @@
       <!-- Título e Pesquisa -->
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-semibold text-gray-800 flex items-center space-x-3">
-          <i class="fa-solid fa-list text-purple-600"></i>
+          <i class="fa-solid fa-list purple1"></i>
           <span>Históricos de Transações</span>
         </h2>
         <div class="relative w-full max-w-md">
@@ -23,7 +23,7 @@
       <!-- Filtros -->
       <div class="flex flex-wrap items-center gap-4 mb-6 bg-gray-50 p-4 rounded-xl shadow-sm border border-gray-300">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-layer-group text-purple-500"></i>
+          <i class="fa-solid fa-layer-group purple1"></i>
           <select
             [(ngModel)]="assetTypeFilter"
             (change)="filterStockHistories()"
@@ -35,7 +35,7 @@
           </select>
         </div>
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-calendar-alt text-purple-500"></i>
+          <i class="fa-solid fa-calendar-alt purple1"></i>
           <input
             type="date"
             [(ngModel)]="startDate"
@@ -44,7 +44,7 @@
           />
         </div>
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-calendar-check text-purple-500"></i>
+          <i class="fa-solid fa-calendar-check purple1"></i>
           <input
             type="date"
             [(ngModel)]="endDate"
@@ -54,7 +54,7 @@
         </div>
         <button
           (click)="clearFilters()"
-          class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+          class="btn background-purple1 hover:background-purple1 text-white flex items-center space-x-2"
         >
           <i class="fa-solid fa-broom"></i>
           <span>Limpar Filtros</span>
@@ -69,7 +69,7 @@
           (click)="getStockDetails(history.id)"
         >
           <div class="flex items-center gap-4">
-            <div class="bg-blue-200 text-blue-700 rounded-full p-3">
+            <div class="background-purple text-blue-700 rounded-full p-3">
               <i class="fa-solid fa-coins"></i>
             </div>
             <div>
@@ -88,7 +88,7 @@
     <!-- Detalhes do Histórico -->
     <section class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
       <h2 class="text-3xl font-semibold mb-6 text-gray-800 flex items-center space-x-3">
-        <i class="fa-solid fa-info-circle text-purple-600"></i>
+        <i class="fa-solid fa-info-circle purple1"></i>
         <span>Detalhes do Histórico</span>
       </h2>
       <div *ngIf="stockDetails" class="space-y-6">
