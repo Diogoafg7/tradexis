@@ -5,6 +5,7 @@ import { TradeService } from '../../trade.service';
 import { StockServiceService } from '../../stock-service.service';
 import { FormsModule } from '@angular/forms';
 import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
+import { ProfileServiceService } from '../../profile-service.service';
 
 @Component({
   selector: 'app-transactions',
@@ -13,21 +14,34 @@ import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes
   styleUrl: './transactions.component.scss'
 })
 export class TransactionsComponent {
-  trades: any[] = []; 
-  filteredTrades: any[] = []; // Transações filtradas
+  trades: any[] = [];
+  filteredTrades: any[] = [];
   tempData: any[] = [];
-  searchQuery: string = ''; // Texto da barra de pesquisa
-  priceMin: number | null = null; // Filtro de preço mínimo
-  priceMax: number | null = null; // Filtro de preço máximo
-  variationFilter: string = ''; // Filtro de variação (positiva ou negativa)
+  searchQuery: string = '';
+  priceMin: number | null = null;
+  priceMax: number | null = null;
+  variationFilter: string = '';
+  currentUserId: number | null = null; 
 
   constructor(
     private tradeService: TradeService,
-    private stockHistoryService: StockServiceService
+    private stockHistoryService: StockServiceService,
+    private profileService: ProfileServiceService
   ) {}
 
   ngOnInit(): void {
     this.loadTrades();
+    this.loadCurrentUser();
+  }
+
+  loadCurrentUser(): void {
+    this.currentUserId = this.profileService.getCurrentUserId(); // Get userId from the service
+    if (this.currentUserId) {
+      this.loadTrades(); // Load trades only if userId is valid
+    } else {
+      console.error('Failed to load current user ID.');
+      alert('User is not logged in.');
+    }
   }
 
   // Carrega todas as transações e inicializa a lista filtrada
@@ -35,10 +49,10 @@ export class TransactionsComponent {
     this.tradeService.getTradesByType(1).subscribe(
       (data) => {
         this.tempData = data.filter(
-          (trade) => trade.user.id === 10
+          (trade) => trade.user.id === this.currentUserId
         );
         this.trades = this.tempData; 
-        this.filteredTrades = this.tempData;
+        this.filteredTrades = this.tempData; 
         console.log('Filtered trades loaded:', data);
       },
       (error) => {
@@ -106,9 +120,11 @@ export class TransactionsComponent {
   this.tradeService.addTrade(userId, assetId, tradeTypeName, quantity).subscribe(
     (response) => {
       console.log('Sell trade added successfully:', response);
+      // After adding the sell trade, delete the old trade
       this.tradeService.deleteTradeById(tradeId).subscribe(
         () => {
           console.log('Trade deleted successfully:', tradeId);
+          // Remove the deleted trade from the UI
           this.filteredTrades = this.filteredTrades.filter((t) => t.id !== tradeId);
           alert('Trade sold successfully!');
         },
