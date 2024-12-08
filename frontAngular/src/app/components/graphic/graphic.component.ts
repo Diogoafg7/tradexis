@@ -60,7 +60,7 @@ export class GraphicComponent implements OnInit, OnDestroy {
             {
               label: 'Preço das Ações',
               data: prices,
-              borderColor: 'rgba(75, 192, 192, 1)',
+              borderColor: '#7F4A88',
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderWidth: 2,
               tension: 0.4, // Suaviza a linha
