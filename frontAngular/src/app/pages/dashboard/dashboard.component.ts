@@ -10,8 +10,6 @@ import { StockData } from '../../models/StockData';
 import { AssetService } from '../../asset.service';
 import { ProfileServiceService } from '../../profile-service.service';
 
-import { AssetService } from '../../asset.service';
-import { ProfileServiceService } from '../../profile-service.service';
 
 
 @Component({
