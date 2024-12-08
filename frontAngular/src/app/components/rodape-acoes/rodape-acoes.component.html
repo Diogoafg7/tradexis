@@ -1,0 +1,35 @@
+<div class="rodaperotativo">
+  <div class="slider">
+    <div class="slide-track">
+      <div class="slide" *ngFor="let acao of acoes">
+        <p class="title-text sigla">
+          {{ acao.api1 }}
+        </p>
+        <p class="title-text nome">
+          $ {{ acao.api4 | number: '1.2-2' }}
+        </p>
+        <p
+          class="dados"
+          [ngStyle]="{ 'color': acao.api3 > 0 ? '#33cc33' : '#ff3333' }"
+        >
+          {{ acao.api3 | percent: '1.2-2' }}
+        </p>
+      </div>
+      <!-- Duplicar os slides para criar um loop infinito mais suave -->
+      <div class="slide" *ngFor="let acao of acoes">
+        <p class="title-text sigla">
+          {{ acao.api1 }}
+        </p>
+        <p class="title-text nome">
+          $ {{ acao.api4 | number: '1.2-2' }}
+        </p>
+        <p
+          class="dados"
+          [ngStyle]="{ 'color': acao.api3 > 0 ? '#33cc33' : '#ff3333' }"
+        >
+          {{ acao.api3 | percent: '1.2-2' }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ProfileServiceService } from '../../profile-service.service';
 import { Profile } from '../../models/profile';
+import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
 
 @Component({
   selector: 'app-profile-details',
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, RodapeAcoesComponent],
   templateUrl: './profile-details.component.html',
   styleUrl: './profile-details.component.scss'
 })

@@ -1,78 +1,5 @@
 <app-header></app-header>
 
-<!-- Barra de Pesquisa e Filtros -->
-<div class="flex items-center justify-between py-4 px-6 bg-gray-100 border-b border-gray-300 shadow-sm">
-  <!-- Pesquisa -->
-  <div class="flex items-center space-x-3">
-    <div class="relative w-64">
-      <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-      <input
-        [(ngModel)]="searchQuery"
-        (input)="filterStocks()"
-        type="text"
-        class="w-full bg-white text-gray-700 px-10 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-        placeholder="Pesquisar ações..."
-      />
-    </div>
-  </div>
-
-  <!-- Filtros -->
-  <div class="flex items-center space-x-6">
-    <!-- Preço Mínimo -->
-    <div class="flex items-center space-x-2">
-      <span class="text-gray-500">
-        <i class="fas fa-dollar-sign"></i>
-      </span>
-      <input
-        type="number"
-        [(ngModel)]="priceMin"
-        (input)="filterStocks()"
-        class="w-24 bg-white text-gray-700 px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-        placeholder="Mín."
-      />
-    </div>
-
-    <!-- Preço Máximo -->
-    <div class="flex items-center space-x-2">
-      <span class="text-gray-500">
-        <i class="fas fa-coins"></i>
-      </span>
-      <input
-        type="number"
-        [(ngModel)]="priceMax"
-        (input)="filterStocks()"
-        class="w-24 bg-white text-gray-700 px-2 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-        placeholder="Máx."
-      />
-    </div>
-
-    <!-- Tipo de Variação -->
-    <div class="flex items-center space-x-2">
-      <span class="text-gray-500">
-        <i class="fas fa-chart-line"></i>
-      </span>
-      <select
-        [(ngModel)]="variationFilter"
-        (change)="filterStocks()"
-        class="bg-white text-gray-700 px-3 py-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-      >
-        <option value="">Todos</option>
-        <option value="positive">Positiva</option>
-        <option value="negative">Negativa</option>
-      </select>
-    </div>
-
-    <!-- Botão para Limpar Filtros -->
-    <button
-      (click)="clearFilters()"
-      class="background-purple1 text-white px-4 py-1 rounded-md hover:bg-blue-600 flex items-center space-x-2 shadow-sm"
-    >
-      <i class="fas fa-times-circle "></i>
-      <span >Limpar</span>
-    </button>
-  </div>
-</div>
-
 <!-- Lista de Ações -->
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50">
   <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300">
@@ -121,3 +48,5 @@
     </div>
   </section>
 </div>
+
+<app-rodape-acoes class="">

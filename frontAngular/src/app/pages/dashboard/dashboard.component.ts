@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ApexChart, ChartType, ApexAxisChartSeries, ApexTitleSubtitle, ApexXAxis } from 'ngx-apexcharts';
 import { NgxApexchartsModule } from 'ngx-apexcharts';
+import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, FormsModule, NgClass, NgxApexchartsModule, HeaderComponent],
+  imports: [NgFor, FormsModule, NgClass, NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush, // Melhora a performance
@@ -19,7 +20,6 @@ export class DashboardComponent {
   priceMin: number | null = null; // Filtro de preço mínimo
   priceMax: number | null = null; // Filtro de preço máximo
   variationFilter: string = ''; // Filtro de variação (positiva, negativa)
-
   selectedStock: any = null; // Ação selecionada para compra
   buyAmount: number = 0; // Quantidade a comprar
 
