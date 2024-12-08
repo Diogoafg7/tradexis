@@ -22,18 +22,7 @@
       </div>
       <!-- Filtros -->
       <div class="flex flex-wrap items-center gap-4 mb-6 bg-gray-50 p-4 rounded-xl shadow-sm border border-gray-300">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-layer-group purple1"></i>
-          <select
-            [(ngModel)]="assetTypeFilter"
-            (change)="filterStockHistories()"
-            class="bg-white text-gray-700 px-4 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 shadow-sm"
-          >
-            <option value="">Tipo de Ativo</option>
-            <option value="Ação">Ação</option>
-            <option value="Fundo">Fundo</option>
-          </select>
-        </div>
+        
         <div class="flex items-center gap-2">
           <i class="fa-solid fa-calendar-alt purple1"></i>
           <input
