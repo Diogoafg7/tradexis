@@ -1,29 +1,38 @@
-import { Component,OnInit ,  } from '@angular/core';
+import { Component,OnInit , ChangeDetectorRef,OnInit ,  } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
 import { NgxApexchartsModule } from 'ngx-apexcharts';
+import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
+import { GraphicComponent } from "../../components/graphic/graphic.component";
+import { StockServiceService } from '../../stock-service.service';
+import { StockData } from '../../models/StockData';
+import { AssetService } from '../../asset.service';
+import { ProfileServiceService } from '../../profile-service.service';
+
 import { AssetService } from '../../asset.service';
 import { ProfileServiceService } from '../../profile-service.service';
 
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, NgIf, FormsModule,  NgxApexchartsModule, HeaderComponent],
+  imports: [NgFor, NgIf, NgClass, FormsModule,  NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent, GraphicComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
+  /* changeDetection: ChangeDetectionStrategy.OnPush, // Melhora a performance */
   
 })
 export class DashboardComponent  {
  stocks: any[] = [ ];
-
+ acoes: StockData[] = [];
   selectedStock: any = null;
   buyAmount: number = 0;
 
-
   constructor(
     private assetService: AssetService,
-    private profileService: ProfileServiceService
+    private profileService: ProfileServiceService,
+    private stockService: StockServiceService ,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   
@@ -47,7 +56,18 @@ export class DashboardComponent  {
 
   ngOnInit(): void {
     this.loadAssets();
+    // Garantir que o conteúdo do componente seja atualizado e os filtros estejam aplicados
+    this.updateRodape();
     console.log('oninit' );
+  }
+
+  // Método para atualizar o rodapé ou realizar outras operações necessárias
+  updateRodape(): void {
+    // Recarregar ou atualizar o rodapé conforme necessário
+  this.stockService.getStockData().subscribe(data => {
+    this.acoes = data; // Atualizar o array de ações
+    this.cdRef.detectChanges(); // Forçar detecção de mudanças
+  });
   }
 
 
