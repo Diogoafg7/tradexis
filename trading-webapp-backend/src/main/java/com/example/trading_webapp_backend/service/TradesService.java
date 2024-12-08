@@ -15,4 +15,5 @@ public interface TradesService {
     List<Trades> getTradesByAssetId(int assetId);
     List<Trades> getTradesByTradeTypeId(int tradeTypeId);
     Trades addTradeWithDetails(int userId, int assetId, String tradeTypeName, double quantity);
+    Trades updateTradeWithDetails(int id, int userId, int assetId, String tradeTypeName, double quantity);
 }

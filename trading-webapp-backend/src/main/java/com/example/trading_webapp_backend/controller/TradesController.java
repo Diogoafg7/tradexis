@@ -78,5 +78,16 @@ public class TradesController {
         return tradesService.addTradeWithDetails(userId, assetId, tradeTypeName, quantity);
     }
 
+    //updateTradeWithDetails
+    @PutMapping("/update-details/{id}/{userId}/{assetId}/{tradeTypeName}/{quantity}")
+    public Trades updateTradeWithDetails(
+            @PathVariable("id") int id,
+            @PathVariable("userId") int userId,
+            @PathVariable("assetId") int assetId,
+            @PathVariable("tradeTypeName") String tradeTypeName,
+            @PathVariable("quantity") double quantity) {
+        return tradesService.updateTradeWithDetails(id, userId, assetId, tradeTypeName, quantity);
+    }
+
 
 }

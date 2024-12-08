@@ -104,6 +104,44 @@ public class TradesServiceImpl implements TradesService {
         return tradesRepository.save(trade);
     }
 
+    @Transactional
+    public Trades updateTradeWithDetails(int id, int userId, int assetId, String tradeTypeName, double quantity) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Assets asset = assetRepository.findById(assetId).orElseThrow(() -> new IllegalArgumentException("Asset not found"));
+        Type_Trades tradeType = typeTradeRepository.findByName(tradeTypeName).orElseThrow(() -> new IllegalArgumentException("Trade type not found"));
+
+        Trades existingTrade = tradesRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Trade not found"));
+
+        // Reverter a transação antiga
+        if (existingTrade.getTradeType().getName().equals("Buy")) {
+            handleRevertBuyTrade(existingTrade);
+        } else if (existingTrade.getTradeType().getName().equals("Sell")) {
+            handleRevertSellTrade(existingTrade);
+        }
+
+        // Atualizar os detalhes da transação
+        double total = quantity * asset.getPrice();
+        Trades updatedTrade = Trades.builder()
+                .id(id)
+                .user(user)
+                .asset(asset)
+                .tradeType(tradeType)
+                .quantity(quantity)
+                .total(total)
+                .build();
+
+        // Aplicar a nova transação
+        if (tradeType.getName().equals("Buy")) {
+            handleBuyTrade(updatedTrade);
+        } else if (tradeType.getName().equals("Sell")) {
+            handleSellTrade(updatedTrade);
+        } else {
+            throw new IllegalArgumentException("Invalid trade type");
+        }
+
+        return tradesRepository.save(updatedTrade);
+    }
+
     void handleSellTrade(Trades trade) {
         Portfolio portfolio = portfolioRepository.findByUserAndAsset(trade.getUser(), trade.getAsset()).orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
         Wallet wallet = walletRepository.findByUser_Id(trade.getUser().getId()).orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
@@ -136,6 +174,30 @@ public class TradesServiceImpl implements TradesService {
             portfolio.setAsset(trade.getAsset());
             portfolio.setQuantity(trade.getQuantity());
         }
+
+        walletRepository.save(wallet);
+        portfolioRepository.save(portfolio);
+    }
+
+    void handleRevertBuyTrade(Trades trade) {
+        Portfolio portfolio = portfolioRepository.findByUserAndAsset(trade.getUser(), trade.getAsset()).orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
+        Wallet wallet = walletRepository.findByUser_Id(trade.getUser().getId()).orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
+
+        double total = trade.getQuantity() * trade.getAsset().getPrice();
+        wallet.setBalance(wallet.getBalance() + total);
+        portfolio.setQuantity(portfolio.getQuantity() - trade.getQuantity());
+
+        walletRepository.save(wallet);
+        portfolioRepository.save(portfolio);
+    }
+
+    void handleRevertSellTrade(Trades trade) {
+        Portfolio portfolio = portfolioRepository.findByUserAndAsset(trade.getUser(), trade.getAsset()).orElseThrow(() -> new IllegalArgumentException("Portfolio not found"));
+        Wallet wallet = walletRepository.findByUser_Id(trade.getUser().getId()).orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
+
+        double total = trade.getQuantity() * trade.getAsset().getPrice();
+        wallet.setBalance(wallet.getBalance() - total);
+        portfolio.setQuantity(portfolio.getQuantity() + trade.getQuantity());
 
         walletRepository.save(wallet);
         portfolioRepository.save(portfolio);
