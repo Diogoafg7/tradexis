@@ -1,16 +1,14 @@
 <app-header></app-header>
 
-<!-- Layout com duas colunas -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50">
-
+<!-- Layout com duas colunas fixando a altura -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50 h-screen">
   <!-- Coluna para a Lista de Ações -->
-  <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300">
+  <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300 overflow-auto h-full">
     <h2 class="text-lg font-semibold mb-4 text-gray-700 flex items-center space-x-2">
       <i class="fas fa-list-alt purple1"></i>
       <span>Ações Disponíveis</span>
     </h2>
     <div class="space-y-4">
-
       <div *ngFor="let stock of stocks" class="flex flex-col bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <!-- Informações da Ação -->
         <div class="flex items-center space-x-3">
@@ -30,12 +28,12 @@
               'text-green-600': stock.change > 0,
               'text-red-600': stock.change < 0
             }" class="text-sm font-semibold">
-            {{ stock.change }}%
+            <!-- {{ stock.change }}% -->
           </div>
         </div>
 
         <!-- Botão de Compra -->
-        <button class="background-purple1 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md"
+        <button class="background-purple1 hover:bg-blue-600 text-white py-2 px-4 rounded-md shadow-md w-24 ml-auto"
           (click)="toggleBuySection(stock)">
           Comprar
         </button>
@@ -53,15 +51,13 @@
         </div>
       </div>
     </div>
-
   </section>
 
   <!-- Coluna para o Gráfico -->
-  <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300">
+  <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300 h-auto">
     <app-graphic></app-graphic>
   </section>
-
 </div>
-<!-- Coluna para o Rodapé -->
 
+<!-- Rodapé -->
 <app-rodape-acoes></app-rodape-acoes>
