@@ -1,76 +1,135 @@
 <app-header></app-header>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-  <!-- Lista de Históricos de Preço -->
-  <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-    <h2 class="text-lg font-semibold mb-4 text-gray-700">Históricos de Transações Feitas</h2>
-    <div class="space-y-4">
-      <div
-        *ngFor="let history of stockHistories"
-        class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer transition-transform duration-300 ease-in-out"
-        [ngClass]="{ 'active': stockDetails?.id === history.id }"
-        (click)="getStockDetails(history.id)"
-      >
-        <div class="flex items-center gap-4">
-          <div class="bg-blue-200 text-blue-700 rounded-full p-3">
-            🏷️
-          </div>
-          <div>
-            <div class="text-lg font-bold text-gray-700">{{ history.asset.name }}</div>
-            <div class="text-sm text-gray-500">Ticker: {{ history.asset.symbol }}</div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end">
-          <div class="text-lg font-bold text-gray-700">{{ history.price | currency }}</div>
-          <div class="text-sm text-gray-500">
-            {{ history.timestamp | date }}
-          </div>
+<div class="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-50 p-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Lista de Históricos de Preço -->
+    <section class="col-span-1 lg:col-span-2 bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+      <!-- Título e Pesquisa -->
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-semibold text-gray-800 flex items-center space-x-3">
+          <i class="fa-solid fa-list text-purple-600"></i>
+          <span>Históricos de Transações</span>
+        </h2>
+        <div class="relative w-full max-w-md">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input
+            [(ngModel)]="searchQuery"
+            (input)="filterStockHistories()"
+            type="text"
+            class="w-full bg-gray-50 text-gray-700 px-10 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 shadow-sm"
+            placeholder="Pesquisar por ativo ou símbolo..."
+          />
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Detalhes do Histórico -->
-  <section class="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-    <h2 class="text-lg font-semibold mb-4 text-gray-700">Detalhes do Histórico</h2>
-    <div class="space-y-6" *ngIf="stockDetails">
-      <div class="space-y-4">
-        
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Ativo:</span>
-          <span class="text-gray-800 font-semibold">{{ stockDetails.asset.name }}</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Ticker:</span>
-          <span class="text-gray-800 font-semibold">{{ stockDetails.asset.symbol }}</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Tipo de Ativo:</span>
-          <span class="text-gray-800 font-semibold">{{ stockDetails.assetTypeName }}</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Preço:</span>
-          <span class="text-gray-800 font-semibold">{{ stockDetails.price | currency }}</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Data e Hora:</span>
-          <span class="text-gray-800 font-semibold">{{ stockDetails.timestamp | date: 'short' }}</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 font-medium">Ganhos ou Perdas:</span>
-          <span 
-            class="font-semibold"
-            [ngClass]="{
-              'text-green-500': calculateProfitOrLoss(stockDetails).includes('Lucro'),
-              'text-red-500': calculateProfitOrLoss(stockDetails).includes('Prejuízo')
-            }"
+      <!-- Filtros -->
+      <div class="flex flex-wrap items-center gap-4 mb-6 bg-gray-50 p-4 rounded-xl shadow-sm border border-gray-300">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-purple-500"></i>
+          <select
+            [(ngModel)]="assetTypeFilter"
+            (change)="filterStockHistories()"
+            class="bg-white text-gray-700 px-4 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 shadow-sm"
           >
-            {{ calculateProfitOrLoss(stockDetails) }}
-          </span>
+            <option value="">Tipo de Ativo</option>
+            <option value="Ação">Ação</option>
+            <option value="Fundo">Fundo</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-calendar-alt text-purple-500"></i>
+          <input
+            type="date"
+            [(ngModel)]="startDate"
+            (change)="filterStockHistories()"
+            class="bg-white text-gray-700 px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 shadow-sm"
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-calendar-check text-purple-500"></i>
+          <input
+            type="date"
+            [(ngModel)]="endDate"
+            (change)="filterStockHistories()"
+            class="bg-white text-gray-700 px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 shadow-sm"
+          />
+        </div>
+        <button
+          (click)="clearFilters()"
+          class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+        >
+          <i class="fa-solid fa-broom"></i>
+          <span>Limpar Filtros</span>
+        </button>
+      </div>
+      <!-- Lista de Histórico -->
+      <div class="space-y-4">
+        <div
+          *ngFor="let history of filteredStockHistories"
+          class="flex justify-between items-center bg-gray-50 p-5 rounded-lg shadow-md border border-gray-200 cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+          [ngClass]="{ 'ring-2 ring-purple-500 bg-purple-50': stockDetails?.id === history.id }"
+          (click)="getStockDetails(history.id)"
+        >
+          <div class="flex items-center gap-4">
+            <div class="bg-blue-200 text-blue-700 rounded-full p-3">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+            <div>
+              <div class="text-lg font-bold text-gray-800">{{ history.asset.name }}</div>
+              <div class="text-sm text-gray-600">Ticker: {{ history.asset.symbol }}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-lg font-semibold text-gray-700">{{ history.price | currency }}</div>
+            <div class="text-sm text-gray-500">{{ history.timestamp | date }}</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div *ngIf="!stockDetails" class="text-gray-500 text-center">
-      Selecione um histórico para ver os detalhes.
-    </div>
-  </section>
+    </section>
+
+    <!-- Detalhes do Histórico -->
+    <section class="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+      <h2 class="text-3xl font-semibold mb-6 text-gray-800 flex items-center space-x-3">
+        <i class="fa-solid fa-info-circle text-purple-600"></i>
+        <span>Detalhes do Histórico</span>
+      </h2>
+      <div *ngIf="stockDetails" class="space-y-6">
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium">Ativo:</span>
+            <span class="text-gray-800 font-semibold">{{ stockDetails.asset.name }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium">Ticker:</span>
+            <span class="text-gray-800 font-semibold">{{ stockDetails.asset.symbol }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium">Tipo de Ativo:</span>
+            <span class="text-gray-800 font-semibold">{{ stockDetails.assetTypeName }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium">Preço:</span>
+            <span class="text-gray-800 font-semibold">{{ stockDetails.price | currency }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium">Data e Hora:</span>
+            <span class="text-gray-800 font-semibold">{{ stockDetails.timestamp | date: 'short' }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600 font-medium">Ganhos ou Perdas:</span>
+            <span
+              class="font-semibold"
+              [ngClass]="{
+                'text-green-600': calculateProfitOrLoss(stockDetails).includes('Lucro'),
+                'text-red-600': calculateProfitOrLoss(stockDetails).includes('Prejuízo')
+              }"
+            >
+              {{ calculateProfitOrLoss(stockDetails) }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!stockDetails" class="text-gray-500 text-center">
+        Selecione um histórico para ver os detalhes.
+      </div>
+    </section>
+  </div>
 </div>
