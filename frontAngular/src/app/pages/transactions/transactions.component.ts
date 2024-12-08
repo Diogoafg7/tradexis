@@ -13,8 +13,9 @@ import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes
   styleUrl: './transactions.component.scss'
 })
 export class TransactionsComponent {
-  trades: any[] = []; // Todas as transações
+  trades: any[] = []; 
   filteredTrades: any[] = []; // Transações filtradas
+  tempData: any[] = [];
   searchQuery: string = ''; // Texto da barra de pesquisa
   priceMin: number | null = null; // Filtro de preço mínimo
   priceMax: number | null = null; // Filtro de preço máximo
@@ -31,18 +32,22 @@ export class TransactionsComponent {
 
   // Carrega todas as transações e inicializa a lista filtrada
   loadTrades(): void {
-    this.tradeService.getAllTrades().subscribe(
+    this.tradeService.getTradesByType(1).subscribe(
       (data) => {
-        this.trades = data;
-        this.filteredTrades = data; // Inicializa a lista filtrada com todas as transações
-        console.log('Trades carregadas:', data);
+        this.tempData = data.filter(
+          (trade) => trade.user.id === 10
+        );
+        this.trades = this.tempData; 
+        this.filteredTrades = this.tempData;
+        console.log('Filtered trades loaded:', data);
       },
       (error) => {
-        console.error('Erro ao carregar trades:', error);
-        alert('Erro ao carregar as transações.');
+        console.error('Error loading trades:', error);
+        alert('Error loading transactions.');
       }
     );
   }
+  
 
   // Filtra as transações com base na pesquisa e nos filtros
   filterTrades(): void {
@@ -83,61 +88,41 @@ export class TransactionsComponent {
     this.filterTrades(); // Atualiza a lista de transações filtradas
   }
 
-  // Função para "vender" uma transação
-  sellTrade(tradeId: number): void {
-    const tradeToSell = this.trades.find((trade) => trade.id === tradeId);
-    if (!tradeToSell) return;
+  sellTrade(tradeId: number):void{
+    // Find the trade to sell
+  const trade = this.filteredTrades.find((t) => t.id === tradeId);
+  if (!trade) {
+    console.error('Trade not found:', tradeId);
+    alert('Trade not found.');
+    return;
+  }
 
-    // Calcula o preço médio de compra
-    const totalQuantity = this.trades
-      .filter((trade) => trade.assetId === tradeToSell.assetId)
-      .reduce((acc, trade) => acc + trade.quantity, 0);
+  const userId = trade.user.id;
+  const assetId = trade.asset.id;
+  const quantity = trade.quantity;
+  const tradeTypeName = "SELL";
 
-    const totalCost = this.trades
-      .filter((trade) => trade.assetId === tradeToSell.assetId)
-      .reduce((acc, trade) => acc + trade.price * trade.quantity, 0);
-
-    const averagePrice = totalCost / totalQuantity;
-
-    // Lucro ou prejuízo
-    const sellPrice = tradeToSell.price;
-    const quantitySold = tradeToSell.quantity;
-    const profitOrLoss = (sellPrice - averagePrice) * quantitySold;
-
-    // Grava no histórico
-    this.stockHistoryService
-      .addHistory({
-        assetId: tradeToSell.assetId,
-        assetName: tradeToSell.asset.name,
-        assetSymbol: tradeToSell.asset.symbol,
-        assetTypeName: tradeToSell.asset.typeName,
-        price: sellPrice,
-        timestamp: new Date(),
-        tradeType: 'Sell',
-        profitOrLoss: profitOrLoss,
-        quantity: quantitySold,
-      })
-      .subscribe(
-        (historyData) => {
-          console.log('Histórico de transação gravado:', historyData);
+  // Add the new "SELL" trade
+  this.tradeService.addTrade(userId, assetId, tradeTypeName, quantity).subscribe(
+    (response) => {
+      console.log('Sell trade added successfully:', response);
+      this.tradeService.deleteTradeById(tradeId).subscribe(
+        () => {
+          console.log('Trade deleted successfully:', tradeId);
+          this.filteredTrades = this.filteredTrades.filter((t) => t.id !== tradeId);
+          alert('Trade sold successfully!');
         },
         (error) => {
-          console.error('Erro ao gravar no histórico:', error);
+          console.error('Error deleting trade:', error);
+          alert('Failed to delete trade.');
         }
       );
-
-    // Remove a transação vendida
-    this.tradeService.deleteTrade(tradeId).subscribe(
-      () => {
-        this.trades = this.trades.filter((trade) => trade.id !== tradeId);
-        this.filterTrades(); // Atualiza a lista filtrada após a venda
-        console.log(`Trade com ID ${tradeId} vendida com sucesso!`);
-      },
-      (error) => {
-        console.error(`Erro ao vender trade com ID ${tradeId}:`, error);
-        alert('Erro ao vender a transação.');
-      }
-    );
+    },
+    (error) => {
+      console.error('Error adding sell trade:', error);
+      alert('Failed to add sell trade.');
+    }
+  );
   }
 
 }

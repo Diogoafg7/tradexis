@@ -16,6 +16,7 @@ import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes
 
 export class TransactionHistoryComponent {
   trades: Trade[] = [];
+  tempData: any[] = [];
   stockHistories: any[] = [];
   filteredStockHistories: any[] = [];
   stockDetails: any | null = null;
@@ -46,22 +47,33 @@ export class TransactionHistoryComponent {
     });
   }
 
-  // Carregar todos os históricos
+
+
   loadAllStockHistories(): void {
-    this.stockHistoryService.getAllStockHistories().subscribe((data) => {
-      this.stockHistories = data;
-      this.filteredStockHistories = [...data]; // Inicializa com todos os históricos
-    });
+    this.tradeService.getTradesByType(2).subscribe(
+      (data) => {
+        this.tempData = data.filter(
+          (trade) => trade.user.id === 10
+        );
+        this.stockHistories = this.tempData; 
+        this.filteredStockHistories = [...this.tempData]; 
+        console.log('Filtered trades loaded:', this.tempData);
+      },
+      (error) => {
+        console.error('Error loading trades:', error);
+        alert('Error loading transactions.');
+      }
+    );
   }
 
-  // Obter detalhes de um histórico
+ 
   getStockDetails(id: number): void {
     this.stockHistoryService.getStockHistoryById(id).subscribe((data) => {
       this.stockDetails = data;
     });
   }
 
-  // Filtrar históricos com base em critérios
+
   filterStockHistories(): void {
     this.filteredStockHistories = this.stockHistories.filter((history) => {
       const matchesSearchQuery =
@@ -84,7 +96,7 @@ export class TransactionHistoryComponent {
     });
   }
 
-  // Limpar filtros
+
   clearFilters(): void {
     this.searchQuery = '';
     this.assetTypeFilter = '';
@@ -93,7 +105,7 @@ export class TransactionHistoryComponent {
     this.filteredStockHistories = [...this.stockHistories];
   }
 
-  // Cálculo de lucro/prejuízo
+
   calculateProfitOrLoss(trade: Trade): string {
     const currentPrice = this.currentPrices[trade.asset.symbol];
     if (!currentPrice) return 'Preço atual não disponível';
