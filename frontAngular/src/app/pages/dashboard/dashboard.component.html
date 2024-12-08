@@ -6,7 +6,7 @@
   <!-- Coluna para a Lista de Ações -->
   <section class="bg-white rounded-lg p-6 shadow-md border border-gray-300">
     <h2 class="text-lg font-semibold mb-4 text-gray-700 flex items-center space-x-2">
-      <i class="fas fa-list-alt text-blue-500"></i>
+      <i class="fas fa-list-alt purple1"></i>
       <span>Ações Disponíveis</span>
     </h2>
     <div class="space-y-4">
@@ -14,7 +14,7 @@
       <div *ngFor="let stock of stocks" class="flex flex-col bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <!-- Informações da Ação -->
         <div class="flex items-center space-x-3">
-          <span class="bg-blue-100 text-blue-500 rounded-full p-2">
+          <span class="purple text-blue-500 rounded-full p-2">
             <i class="fas fa-piggy-bank"></i>
           </span>
           <div>
@@ -45,7 +45,7 @@
             <input min="0" type="number" [(ngModel)]="buyAmount"
               class="block w-full p-2 border bg-gray-50 rounded-md focus:ring-purple-500 focus:border-purple-500"
               placeholder="Ex: 100" />
-            <button class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-md"
+            <button class="background-purple1 hover:bg-purple-600 text-white py-2 px-4 rounded-md"
               (click)="confirmPurchase(stock)">
               Confirmar
             </button>

@@ -8,6 +8,15 @@
     box-shadow: 0 4px 10px rgba(107, 70, 193, 0.3); /* Sombra roxa para dar destaque */
     transform: scale(1.05); /* Aumenta um pouco a escala para dar foco */
   }
+
+  .purple {
+    background-color: #7F4A88;
+    color: white;
+  }
+  .purple1 {
+    
+    color: #7F4A88;
+  }
   
   /* Efeito de hover */
   .bg-white:hover {
@@ -36,4 +45,13 @@
     box-shadow: 0px 4px 10px rgba(124, 58, 237, 0.2); /* Adiciona uma sombra */
     border-color: #7c3aed; /* Destaca a borda */
     transform: translateY(0) !important; /* Remove o scale no hover */
+  }
+
+  .background-purple1 {
+    background-color: #7F4A88;
+    color: white;
+  }
+  .background-purple1:hover {
+    background-color: #62256d;
+    color: white;
   }
