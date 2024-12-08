@@ -74,34 +74,42 @@ export class DashboardComponent  {
   }
 
   confirmPurchase(stock: any): void {
-    const userId = this.profileService.getCurrentUserId(); 
-    //console.log('userid', userId );
-    const assetId = stock.id; 
-    //console.log('assetId', assetId );
-    const tradeTypeName = 'BUY'; 
-    const quantity = this.buyAmount;
+    const userId = this.profileService.getCurrentUserId();
+    const assetId = stock.id;
+    const tradeTypeName = 'BUY';
   
-    if (quantity <= 0) {
+    if (this.buyAmount <= 0) {
       console.error('Quantity must be greater than zero.');
+      alert('Quantity must be greater than zero.');
       return;
     }
   
-    this.assetService.addTrade(userId, assetId, tradeTypeName, quantity).subscribe(
-      (response) => {
-        console.log('Trade added successfully:', response);
-        alert('Trade successfully submitted!');
-        // Reset  page elements
-        this.selectedStock = null;
-        this.buyAmount = 0;
-      },
-      (error) => {
-        console.error('Error adding trade:', error);
-        alert('Failed to submit trade.');
+    let hasError = false; 
+    for (let i = 0; i < this.buyAmount; i++) {
+      if (hasError) {
+        console.error('Skipping further requests due to previous error.');
+        return; 
       }
-    );
-      console.log('Purchasing', this.buyAmount, 'of', stock.symbol);
-   
+  
+      this.assetService.addTrade(userId, assetId, tradeTypeName, 1).subscribe(
+        (response) => {
+          console.log(`Trade ${i + 1} added successfully:`, response)
+          if (i === this.buyAmount - 1) {
+            alert('All trades successfully submitted!');
+            this.selectedStock = null;
+            this.buyAmount = 0;
+          }
+        },
+        (error) => {
+          console.error(`Error adding trade ${i + 1}:`, error);
+          hasError = true; 
+          alert('Failed to submit trade. Stopping further submissions.');
+        }
+      );
+    }
+    console.log(`Purchasing ${this.buyAmount} units of ${stock.symbol}`);
   }
+  
 
   
 }
