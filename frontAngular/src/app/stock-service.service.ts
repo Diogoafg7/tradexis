@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { StockData } from './models/StockData';
 
 @Injectable({
   providedIn: 'root'
@@ -25,14 +26,14 @@ export class StockServiceService {
     return this.http.get<any[]>(`${this.apiUrl}/get-by-asset-id/${assetId}`);
   }
 
-  // 4. Adicionar ou atualizar histórico de preço para um ativo
+  /* // 4. Adicionar ou atualizar histórico de preço para um ativo
   addStockHistory(symbol: string, price: number): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/add`, null, {
       params: { symbol, price: price.toString() },
     });
-  }
+  } */
 
-  // 5. Adicionar ou atualizar histórico de preço com timestamp
+  /* // 5. Adicionar ou atualizar histórico de preço com timestamp
   addStockHistoryWithTimestamp(
     symbol: string,
     price: number,
@@ -41,9 +42,17 @@ export class StockServiceService {
     return this.http.post<void>(`${this.apiUrl}/add-with-timestamp`, null, {
       params: { symbol, price: price.toString(), timestamp },
     });
-  }
-  // Adicionar um histórico de transação
+  } */
+ // Adicionar um histórico de transação
   addHistory(history: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/add`, history);
   }
+ 
+
+  //----------------- Graphics
+
+  getStockData(): Observable<StockData[]> {
+    return this.http.get<StockData[]>('http://localhost:8080/assets/list');
+  }
+  
 }

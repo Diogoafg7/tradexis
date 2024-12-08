@@ -25,6 +25,7 @@ export class DashboardComponent  {
   selectedStock: any = null;
   buyAmount: number = 0;
 
+
   constructor(
     private assetService: AssetService,
     private profileService: ProfileServiceService,

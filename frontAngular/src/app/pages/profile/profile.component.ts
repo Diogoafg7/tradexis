@@ -4,11 +4,12 @@ import { ProfileServiceService } from '../../profile-service.service';
 import { Profile } from '../../models/profile';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
 
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule, HeaderComponent, RouterLink],
+  imports: [ReactiveFormsModule, HeaderComponent, RouterLink, RodapeAcoesComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

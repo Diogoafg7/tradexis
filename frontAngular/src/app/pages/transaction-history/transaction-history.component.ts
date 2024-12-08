@@ -5,10 +5,11 @@ import { StockServiceService } from '../../stock-service.service';
 import { Trade } from '../../models/trade';
 import { TradeService } from '../../trade.service';
 import { FormsModule } from '@angular/forms';
+import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
 
 @Component({
   selector: 'app-transaction-history',
-  imports: [HeaderComponent, NgFor, NgIf, NgClass, CommonModule, FormsModule],
+  imports: [HeaderComponent, NgFor, NgIf, NgClass, CommonModule, FormsModule, RodapeAcoesComponent],
   templateUrl: './transaction-history.component.html',
   styleUrl: './transaction-history.component.scss'
 })

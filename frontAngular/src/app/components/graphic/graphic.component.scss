@@ -1,0 +1,12 @@
+.chart-container {
+  position: relative;
+  height: 100%;  // Garantir que o gráfico ocupe 100% da altura do contêiner pai
+  width: 100%;   // Garantir que o gráfico ocupe 100% da largura do contêiner pai
+  max-width: 100%;  // Para garantir que o gráfico não ultrapasse a largura da div
+  max-height: 100%; // Para garantir que o gráfico não ultrapasse a altura da div
+}
+
+canvas {
+  width: 100% !important;  // Aumenta o gráfico para ocupar toda a largura disponível
+  height: 100% !important; // Aumenta o gráfico para ocupar toda a altura disponível
+}
