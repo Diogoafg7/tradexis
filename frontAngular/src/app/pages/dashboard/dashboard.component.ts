@@ -13,7 +13,7 @@ import { ProfileServiceService } from '../../profile-service.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, NgIf, FormsModule,  NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent, GraphicComponent],
+  imports: [NgFor, NgIf, NgClass, FormsModule,  NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent, GraphicComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   /* changeDetection: ChangeDetectionStrategy.OnPush, // Melhora a performance */
