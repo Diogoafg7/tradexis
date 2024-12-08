@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { TradeService } from '../../trade.service';
 import { StockServiceService } from '../../stock-service.service';
 import { FormsModule } from '@angular/forms';
+import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
 
 @Component({
   selector: 'app-transactions',
-  imports: [HeaderComponent, CommonModule, FormsModule],
+  imports: [HeaderComponent, CommonModule, FormsModule, RodapeAcoesComponent],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss'
 })

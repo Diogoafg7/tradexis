@@ -1,0 +1,20 @@
+<div class="rodaperotativo">
+  <div class="slider">
+    <div class="slide-track">
+      <div class="slide" *ngFor="let acao of acoes">
+        <p class="title-text sigla">
+          {{ acao.symbol }}
+        </p>
+        <p class="title-text nome">
+          $ {{ acao.price | number: '1.2-2' }}
+        </p>
+        <!-- <p
+          class="dados"
+          [ngStyle]="{ 'color': acao.price > 0 ? '#33cc33' : '#ff3333' }"
+        >
+          {{ acao.price | number: '1.2-2' }}
+        </p> -->
+      </div>
+    </div>
+  </div>
+</div>
