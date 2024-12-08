@@ -16,7 +16,7 @@ import { ProfileServiceService } from '../../profile-service.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, NgIf, NgClass, FormsModule,  NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent, GraphicComponent],
+  imports: [NgFor, NgIf, NgClass, FormsModule,  NgxApexchartsModule, HeaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   /* changeDetection: ChangeDetectionStrategy.OnPush, // Melhora a performance */
@@ -64,7 +64,7 @@ export class DashboardComponent  {
   // Método para atualizar o rodapé ou realizar outras operações necessárias
   updateRodape(): void {
     // Recarregar ou atualizar o rodapé conforme necessário
-  this.stockService.getStockData().subscribe(data => {
+  this.assetService.getAssets().subscribe(data => {
     this.acoes = data; // Atualizar o array de ações
     this.cdRef.detectChanges(); // Forçar detecção de mudanças
   });
