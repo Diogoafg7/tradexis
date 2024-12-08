@@ -6,6 +6,8 @@ import { Trade } from '../../models/trade';
 import { TradeService } from '../../trade.service';
 import { FormsModule } from '@angular/forms';
 import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes.component';
+import { ProfileServiceService } from '../../profile-service.service';
+
 
 @Component({
   selector: 'app-transaction-history',
@@ -21,6 +23,7 @@ export class TransactionHistoryComponent {
   filteredStockHistories: any[] = [];
   stockDetails: any | null = null;
   currentPrices: { [key: string]: number } = {};
+  currentUserId: number | null = null; 
 
   // Filtros
   searchQuery: string = '';
@@ -30,12 +33,14 @@ export class TransactionHistoryComponent {
 
   constructor(
     private stockHistoryService: StockServiceService,
-    private tradeService: TradeService
+    private tradeService: TradeService,
+    private profileService: ProfileServiceService
+
   ) {}
 
   ngOnInit(): void {
     this.loadAllStockHistories();
-
+    this.loadCurrentUser();
     this.tradeService.getAllTrades().subscribe((data: Trade[]) => {
       this.trades = data;
 
@@ -47,13 +52,16 @@ export class TransactionHistoryComponent {
     });
   }
 
+  loadCurrentUser(): void {
+    this.currentUserId = this.profileService.getCurrentUserId(); 
+  }
 
 
   loadAllStockHistories(): void {
     this.tradeService.getTradesByType(2).subscribe(
       (data) => {
         this.tempData = data.filter(
-          (trade) => trade.user.id === 10
+          (trade) => trade.user.id === this.currentUserId
         );
         this.stockHistories = this.tempData; 
         this.filteredStockHistories = [...this.tempData]; 

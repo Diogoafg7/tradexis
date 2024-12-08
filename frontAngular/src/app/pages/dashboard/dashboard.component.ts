@@ -43,7 +43,7 @@ export class DashboardComponent  {
         //   ...stock,
         //   id: stock.assetId, // Map `assetId` from backend to `id` for consistency
         // }));
-        console.log('Fetched data:', this.stocks);
+       // console.log('Fetched data:', this.stocks);
         
       },
       (error) => {
@@ -56,7 +56,7 @@ export class DashboardComponent  {
     this.loadAssets();
     // Garantir que o conteúdo do componente seja atualizado e os filtros estejam aplicados
     this.updateRodape();
-    console.log('oninit' );
+   // console.log('oninit' );
   }
 
   // Método para atualizar o rodapé ou realizar outras operações necessárias
@@ -77,6 +77,7 @@ export class DashboardComponent  {
     const userId = this.profileService.getCurrentUserId();
     const assetId = stock.id;
     const tradeTypeName = 'BUY';
+    const quantity = 1;
   
     if (this.buyAmount <= 0) {
       console.error('Quantity must be greater than zero.');
@@ -84,31 +85,45 @@ export class DashboardComponent  {
       return;
     }
   
-    let hasError = false; 
-    for (let i = 0; i < this.buyAmount; i++) {
-      if (hasError) {
-        console.error('Skipping further requests due to previous error.');
-        return; 
+    let hasError = false;
+  
+    const processTrade = (index: number): void => {
+      if (index >= this.buyAmount || hasError) {
+        if (hasError) {
+          console.error('Stopping further requests due to an error.');
+        } else {
+          alert('All trades successfully submitted!');
+          this.selectedStock = null;
+          this.buyAmount = 0;
+        }
+        return;
       }
   
-      this.assetService.addTrade(userId, assetId, tradeTypeName, 1).subscribe(
+      // Submit the trade
+      this.assetService.addTrade(userId, assetId, tradeTypeName, quantity).subscribe(
         (response) => {
-          console.log(`Trade ${i + 1} added successfully:`, response)
-          if (i === this.buyAmount - 1) {
-            alert('All trades successfully submitted!');
-            this.selectedStock = null;
-            this.buyAmount = 0;
-          }
+          console.log(`Trade ${index + 1} submitted successfully:`, response);
+          processTrade(index + 1); // Continue to the next trade after success
         },
         (error) => {
-          console.error(`Error adding trade ${i + 1}:`, error);
-          hasError = true; 
+          console.error(`Error adding trade ${index + 1}:`, error);
+          hasError = true;
           alert('Failed to submit trade. Stopping further submissions.');
         }
       );
-    }
+  
+      // Add a delay before the next iteration
+      setTimeout(() => {
+        if (!hasError) {
+          processTrade(index + 1); // Proceed to the next trade
+        }
+      }, 1000); // 10 seconds delay
+    };
+  
     console.log(`Purchasing ${this.buyAmount} units of ${stock.symbol}`);
+    processTrade(0); // Start processing trades
   }
+  
   
 
   
