@@ -62,4 +62,11 @@ public class AssetsController {
         assetsService.deleteAllAssets();
         return ResponseEntity.ok("Ativos deletados com sucesso!");
     }
+
+    //deleteAssetById
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAssetById(@PathVariable int id) {
+        assetsService.deleteAssetById(id);
+        return ResponseEntity.ok("Ativo deletado com sucesso!");
+    }
 }

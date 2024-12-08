@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component,OnInit , ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -7,40 +7,56 @@ import { RodapeAcoesComponent } from '../../components/rodape-acoes/rodape-acoes
 import { GraphicComponent } from "../../components/graphic/graphic.component";
 import { StockServiceService } from '../../stock-service.service';
 import { StockData } from '../../models/StockData';
+import { AssetService } from '../../asset.service';
+import { ProfileServiceService } from '../../profile-service.service';
+
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, FormsModule, NgClass, NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent, GraphicComponent, GraphicComponent],
+  imports: [NgFor, NgIf, FormsModule,  NgxApexchartsModule, HeaderComponent, RodapeAcoesComponent, GraphicComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   /* changeDetection: ChangeDetectionStrategy.OnPush, // Melhora a performance */
-})
-export class DashboardComponent {
   
-  stocks: any[] = []; // Lista completa de ações disponíveis
-  filteredStocks: any[] = []; // Ações filtradas com base na pesquisa e filtros
-  searchQuery: string = ''; // Termo de pesquisa
-  priceMin: number | null = null; // Filtro de preço mínimo
-  priceMax: number | null = null; // Filtro de preço máximo
-  variationFilter: string = ''; // Filtro de variação (positiva, negativa)
-  selectedStock: any = null; // Ação selecionada para compra
-  buyAmount: number = 0; // Quantidade a comprar
-  acoes: StockData[] = [];
+})
+export class DashboardComponent  {
+ stocks: any[] = [ ];
+ acoes: StockData[] = [];
+  selectedStock: any = null;
+  buyAmount: number = 0;
 
-  constructor(private cdRef: ChangeDetectorRef, private stockService: StockServiceService) {
-    // Exemplo de dados de ações
-    this.stocks = [
-      { name: 'Apple Inc.', symbol: 'AAPL', price: 175.64, change: 0.52, daily: '↑' },
-      { name: 'Tesla Inc.', symbol: 'TSLA', price: 687.45, change: -1.13, daily: '↓' },
-      { name: 'Microsoft Corp.', symbol: 'MSFT', price: 305.23, change: 1.34, daily: '↑' },
-      { name: 'Amazon.com Inc.', symbol: 'AMZN', price: 125.30, change: -0.21, daily: '↓' }
-    ];
-    this.filteredStocks = [...this.stocks]; // Inicializa com todas as ações
+
+  constructor(
+    private assetService: AssetService,
+    private profileService: ProfileServiceService,
+    private stockService: StockServiceService ,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  
+  
+  loadAssets(): void {
+    this.assetService.getAssets().subscribe(
+      (data) => {
+        this.stocks = data;
+        // .map((stock) => ({
+        //   ...stock,
+        //   id: stock.assetId, // Map `assetId` from backend to `id` for consistency
+        // }));
+        console.log('Fetched data:', this.stocks);
+        
+      },
+      (error) => {
+        console.error('Error fetching assets', error);
+      }
+    );
   }
 
   ngOnInit(): void {
+    this.loadAssets();
     // Garantir que o conteúdo do componente seja atualizado e os filtros estejam aplicados
     this.updateRodape();
+    console.log('oninit' );
   }
 
   // Método para atualizar o rodapé ou realizar outras operações necessárias
@@ -51,6 +67,41 @@ export class DashboardComponent {
     this.cdRef.detectChanges(); // Forçar detecção de mudanças
   });
   }
+
+
+  toggleBuySection(stock: any): void {
+    this.selectedStock = this.selectedStock === stock ? null : stock;
+  }
+
+  confirmPurchase(stock: any): void {
+    const userId = this.profileService.getCurrentUserId(); 
+    //console.log('userid', userId );
+    const assetId = stock.id; 
+    //console.log('assetId', assetId );
+    const tradeTypeName = 'BUY'; 
+    const quantity = this.buyAmount;
   
+    if (quantity <= 0) {
+      console.error('Quantity must be greater than zero.');
+      return;
+    }
+  
+    this.assetService.addTrade(userId, assetId, tradeTypeName, quantity).subscribe(
+      (response) => {
+        console.log('Trade added successfully:', response);
+        alert('Trade successfully submitted!');
+        // Reset  page elements
+        this.selectedStock = null;
+        this.buyAmount = 0;
+      },
+      (error) => {
+        console.error('Error adding trade:', error);
+        alert('Failed to submit trade.');
+      }
+    );
+      console.log('Purchasing', this.buyAmount, 'of', stock.symbol);
+   
+  }
+
   
 }

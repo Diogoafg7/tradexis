@@ -1,5 +1,11 @@
 -- Criar a base de dados
-CREATE DATABASE IF NOT EXISTS trading_db;
+--CREATE DATABASE IF NOT EXISTS trading_db;
+
+-- Apagar a base de dados existente
+DROP DATABASE IF EXISTS trading_db;
+
+-- Criar a base de dados
+CREATE DATABASE trading_db;
 
 -- Selecionar a base de dados
 USE trading_db;
@@ -77,7 +83,7 @@ CREATE TABLE IF NOT EXISTS Portfolio (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   asset_id INT NOT NULL,
-  quantity DOUBLE NOT NULL,
+  quantity DECIMAL(10,2) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
   FOREIGN KEY (asset_id) REFERENCES Assets(id) ON DELETE CASCADE,
   UNIQUE (user_id, asset_id)

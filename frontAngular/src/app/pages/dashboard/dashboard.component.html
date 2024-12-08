@@ -10,9 +10,10 @@
       <span>Ações Disponíveis</span>
     </h2>
     <div class="space-y-4">
+    
       <div
-        *ngFor="let stock of filteredStocks"
-        class="flex justify-between items-center bg-gray-100 p-4 rounded-lg border border-gray-200 shadow-sm"
+        *ngFor="let stock of stocks"
+        class="flex flex-col bg-white p-4 rounded-lg shadow-sm border border-gray-200"
       >
         <!-- Informações da Ação -->
         <div class="flex items-center space-x-3">
